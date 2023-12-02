@@ -63,4 +63,8 @@ export default class Bili {
     async getRoomInfo(room_id) {
         return await BApi.getRoomInfo(room_id, this.ck ? this.ck : this.getCK())
     }
+    
+    async getRoomInfoByUid(mid) {
+        return await BApi.getRoomInfobyMid(mid)
+    }
 }

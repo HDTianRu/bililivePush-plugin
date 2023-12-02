@@ -1,4 +1,3 @@
-import { segment } from 'oicq'
 import Bili from '../model/bilibili.js'
 import moment from 'moment'
 
@@ -19,6 +18,14 @@ export default class bilibili extends plugin {
                 {
                     reg: '^#取消订阅直播间',
                     fnc: 'delLivePush'
+                },
+                {
+                    reg: '^#订阅(up|UP|Up)(uid:|UID:)?',
+                    fnc: 'setLivePushByUid'
+                },
+                {
+                    reg: '^#取消订阅(up|UP|Up)(uid:|UID:)?',
+                    fnc: 'delLivePushByUid'
                 }
 
             ]
@@ -55,12 +62,12 @@ export default class bilibili extends plugin {
     }
 
     async setLivePush(e) {
-        let room_id = e.msg.replace("#订阅直播间", "")
+        let room_id = e.msg.replace(new RegExp(e.reg), "").trim()
         if (isNaN(room_id)) {
             return e.reply("直播间id格式不对！请输入数字！")
         }
-        let reslut = await this.bili.getRoomInfo(room_id)
-        if (!reslut?.uid) {
+        let result = await this.bili.getRoomInfo(room_id)
+        if (!result?.uid) {
             return e.reply("不存在该直播间！")
         }
         let data = {
@@ -70,6 +77,62 @@ export default class bilibili extends plugin {
         }
         this.bili.setBilibiLiveData(data)
         return e.reply("直播间订阅成功！")
+    }
+    
+    async delLivePush(e) {
+        let room_id = e.msg.replace(new RegExp(e.reg), "").trim()
+        if (isNaN(room_id)) {
+            return e.reply("直播间id格式不对！请输入数字！")
+        }
+        let result = this.bili.getBilibiLiveData()
+
+        if (!result[room_id] || !result[room_id].group[e.group_id] || !result[room_id].group[e.group_id].includes(e.user_id)) {
+            return e.reply("你还没有订阅该直播间！")
+        }
+
+        this.bili.delBilibiLiveData({
+            room_id: room_id,
+            user_id: e.user_id
+        })
+        return e.reply("取消直播间订阅成功！")
+    }
+    
+    async setLivePushByUid(e) {
+        let uid = e.msg.replace(new RegExp(e.reg), "").trim()
+        if (isNaN(uid)) {
+            return e.reply("uid格式不对！请输入数字！")
+        }
+        let room_id = await this.bili.getRoomInfoByUid(uid)
+        let result = await this.bili.getRoomInfo(room_id)
+        if (!result?.uid) {
+            return e.reply("不存在该直播间！")
+        }
+        let data = {
+            room_id: room_id,
+            group_id: e.group_id,
+            user_id: e.user_id
+        }
+        this.bili.setBilibiLiveData(data)
+        return e.reply("直播间订阅成功！")
+    }
+    
+    async delLivePushByUid(e) {
+        let uid = e.msg.replace(new RegExp(e.reg), "").trim()
+        if (isNaN(uid)) {
+            return e.reply("uid格式不对！请输入数字！")
+        }
+        let room_id = await this.bili.getRoomInfoByUid(uid)
+        let result = this.bili.getBilibiLiveData()
+
+        if (!result[room_id] || !result[room_id].group[e.group_id] || !result[room_id].group[e.group_id].includes(e.user_id)) {
+            return e.reply("你还没有订阅该直播间！")
+        }
+
+        this.bili.delBilibiLiveData({
+            room_id: room_id,
+            user_id: e.user_id
+        })
+        return e.reply("取消直播间订阅成功！")
     }
 
     async livepush() {
@@ -94,24 +157,6 @@ export default class bilibili extends plugin {
         }
     }
 
-    async delLivePush(e) {
-        let room_id = e.msg.replace("#取消订阅直播间", "")
-        if (isNaN(room_id)) {
-            return e.reply("直播间id格式不对！请输入数字！")
-        }
-        let reslut = this.bili.getBilibiLiveData()
-
-        if (!reslut[room_id] || !reslut[room_id].group[e.group_id] || !reslut[room_id].group[e.group_id].includes(e.user_id)) {
-            return e.reply("你还没有订阅该直播间！")
-        }
-
-        this.bili.delBilibiLiveData({
-            room_id: room_id,
-            user_id: e.user_id
-        })
-        return e.reply("取消直播间订阅成功！")
-    }
-    
     getDealTime(stime, etime) {
         let str = ''
         let dura = etime.format('x') - stime.format('x');

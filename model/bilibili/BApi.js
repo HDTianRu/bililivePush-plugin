@@ -18,6 +18,21 @@ class BApi {
             })
         })
     }
+    
+    async getRoomInfobyMid(mid) {
+        return new Promise(async (resolve, reject) => {
+            new networks({
+                url: `https://api.live.bilibili.com/live_user/v1/Master/info?uid=${mid}`, headers: {
+                }, type: 'json'
+            }).getData().then(res => {
+                if (res.code == 0) {
+                    resolve({ room_id: res.data.room_id })
+                } else {
+                    resolve(res)
+                }
+            })
+        })
+    }
 }
 
 export default new BApi()
