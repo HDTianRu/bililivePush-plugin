@@ -62,7 +62,7 @@ export default class bilibili extends plugin {
     }
 
     async setLivePush(e) {
-        let room_id = e.msg.replace(new RegExp(e.reg), "").trim()
+        let room_id = /[0-9]+/.exec(e.msg)[0]
         if (isNaN(room_id)) {
             return e.reply("直播间id格式不对！请输入数字！")
         }
@@ -80,7 +80,7 @@ export default class bilibili extends plugin {
     }
     
     async delLivePush(e) {
-        let room_id = e.msg.replace(new RegExp(e.reg), "").trim()
+        let room_id = /[0-9]+/.exec(e.msg)[0]
         if (isNaN(room_id)) {
             return e.reply("直播间id格式不对！请输入数字！")
         }
@@ -98,7 +98,7 @@ export default class bilibili extends plugin {
     }
     
     async setLivePushByUid(e) {
-        let uid = e.msg.replace(new RegExp(e.reg), "").trim()
+        let uid = /[0-9]+/.exec(e.msg)[0]
         if (isNaN(uid)) {
             return e.reply("uid格式不对！请输入数字！")
         }
@@ -117,7 +117,7 @@ export default class bilibili extends plugin {
     }
     
     async delLivePushByUid(e) {
-        let uid = e.msg.replace(new RegExp(e.reg), "").trim()
+        let uid = /[0-9]+/.exec(e.msg)[0]
         if (isNaN(uid)) {
             return e.reply("uid格式不对！请输入数字！")
         }
