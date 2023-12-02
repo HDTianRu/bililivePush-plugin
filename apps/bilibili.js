@@ -102,7 +102,7 @@ export default class bilibili extends plugin {
         if (isNaN(uid)) {
             return e.reply("uid格式不对！请输入数字！")
         }
-        let room_id = await this.bili.getRoomInfoByUid(uid)
+        let room_id = await this.bili.getRoomInfoByUid(uid).room_id
         let result = await this.bili.getRoomInfo(room_id)
         if (!result?.uid) {
             return e.reply("不存在该直播间！")
@@ -121,9 +121,8 @@ export default class bilibili extends plugin {
         if (isNaN(uid)) {
             return e.reply("uid格式不对！请输入数字！")
         }
-        let room_id = await this.bili.getRoomInfoByUid(uid)
+        let room_id = await this.bili.getRoomInfoByUid(uid).room_id
         let result = this.bili.getBilibiLiveData()
-
         if (!result[room_id] || !result[room_id].group[e.group_id] || !result[room_id].group[e.group_id].includes(e.user_id)) {
             return e.reply("你还没有订阅该直播间！")
         }
