@@ -5,7 +5,7 @@ export default class bilibili extends plugin {
     constructor(e) {
         super({
             name: 'bilibili',
-            priority: 50,
+            priority: 25,
             rule: [
                 {
                     reg: '^#(强制)?设置b站ck',
