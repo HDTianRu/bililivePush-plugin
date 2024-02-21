@@ -12,19 +12,19 @@ export default class bilibili extends plugin {
                     fnc: 'setCk'
                 },
                 {
-                    reg: '^#订阅直播间',
+                    reg: '^#(全体)?订阅直播间',
                     fnc: 'setLivePush'
                 },
                 {
-                    reg: '^#取消订阅直播间',
+                    reg: '^#(全体)?取消订阅直播间',
                     fnc: 'delLivePush'
                 },
                 {
-                    reg: '^#订阅(up|UP|Up)(uid:|UID:)?',
+                    reg: '^#(全体)?订阅(up|UP|Up)(uid:|UID:)?',
                     fnc: 'setLivePushByUid'
                 },
                 {
-                    reg: '^#取消订阅(up|UP|Up)(uid:|UID:)?',
+                    reg: '^#(全体)?取消订阅(up|UP|Up)(uid:|UID:)?',
                     fnc: 'delLivePushByUid'
                 }
 
@@ -62,6 +62,7 @@ export default class bilibili extends plugin {
     }
 
     async setLivePush(e) {
+        if (/.*全体.*/.test(e.msg)) e.user_id = 0
         let room_id = /[0-9]+/.exec(e.msg)[0]
         if (isNaN(room_id)) {
             return e.reply("直播间id格式不对！请输入数字！")
@@ -80,6 +81,7 @@ export default class bilibili extends plugin {
     }
     
     async delLivePush(e) {
+        if (/.*全体.*/.test(e.msg)) e.user_id = 0
         let room_id = /[0-9]+/.exec(e.msg)[0]
         if (isNaN(room_id)) {
             return e.reply("直播间id格式不对！请输入数字！")
@@ -98,6 +100,7 @@ export default class bilibili extends plugin {
     }
     
     async setLivePushByUid(e) {
+        if (/.*全体.*/.test(e.msg)) e.user_id = 0
         let uid = /[0-9]+/.exec(e.msg)[0]
         if (isNaN(uid)) {
             return e.reply("uid格式不对！请输入数字！")
@@ -117,6 +120,7 @@ export default class bilibili extends plugin {
     }
     
     async delLivePushByUid(e) {
+        if (/.*全体.*/.test(e.msg)) e.user_id = 0
         let uid = /[0-9]+/.exec(e.msg)[0]
         if (isNaN(uid)) {
             return e.reply("uid格式不对！请输入数字！")
