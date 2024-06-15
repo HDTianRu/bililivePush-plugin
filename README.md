@@ -1,6 +1,8 @@
-### bililivePush-plugin
-非常简洁易用的b站直播推送插件
+## bililivePush-plugin
+
+### 简洁易用的b站直播推送插件
 本插件部分源码由[reset-qianyu-plugin](https://gitee.com/think-first-sxs/reset-qianyu-plugin)中分离出来，并由我自己的喜好进行修改，简化并优化代码结构，用于自用
+
 ### 安装
 进入plugin目录
 ```
@@ -9,6 +11,7 @@ git clone https://gitee.com/HDTianRu/bililivePush-plugin
 cd ..
 pnpm install
 ```
+
 ###使用
 |指令|功能|
 |-------|-------|
@@ -24,3 +27,14 @@ pnpm install
 #全体取消订阅12345
 #取消订阅13579
 ```
+
+### 其他
+交流群：[893157055](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=BWtOJkAHVX20OlQqgAIPn7UID9LtigSg&group_code=893157055)  
+有问题提issue  
+提交发pull request  
+最后希望能给项目点个star~
+
+#### 项目链接
+听说Stars越多，更新越快哦~  
+github：[https://github.com/HDTianRu/TianRu-plugin](https://github.com/HDTianRu/bililivePush-plugin)  
+gitee：[https://gitee.com/HDTianRu/TianRu-plugin](https://gitee.com/HDTianRu/bililivePush-plugin)
