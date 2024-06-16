@@ -1,6 +1,9 @@
 import lodash from 'lodash'
 import fs from 'fs'
-import {_path, pluginName} from "../config/constant.js"
+import {
+  _path,
+  pluginName
+} from "../config/constant.js"
 
 const getRoot = (root = '') => {
   if (root === 'root' || root === 'yunzai') {
@@ -22,7 +25,7 @@ let Data = {
     let nowPath = root
     pathList.forEach((name, idx) => {
       name = name.trim()
-      if (idx < pathList.length - (includeFile ? 1 : 0)) {
+      if (idx < pathList.length - (includeFile ? 1: 0)) {
         nowPath += '/' + name
         if (name) {
           if (!fs.existsSync(nowPath)) {
@@ -32,16 +35,17 @@ let Data = {
       }
     })
   },
-  
-  
-  read (file = '', root = '') {
+
+
+  read (file = '',
+    root = '') {
     root = getRoot(root)
     if (!fs.existsSync(`${root}/${file}`)) return ''
-      try {
-        return fs.readFileSync(`${root}/${file}`, 'utf8')
-      } catch (e) {
-        console.log(e)
-      }
+    try {
+      return fs.readFileSync(`${root}/${file}`, 'utf8')
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   write (file, data, root = '') {
@@ -83,7 +87,9 @@ let Data = {
   },
 
   async setCacheJSON (key, data, EX = 3600 * 24 * 90) {
-    await redis.set(key, JSON.stringify(data), { EX })
+    await redis.set(key, JSON.stringify(data), {
+      EX
+    })
   },
 
   async importModule (file, root = '') {
@@ -163,8 +169,12 @@ let Data = {
     return ret
   },
 
-  getVal (target, keyFrom, defaultValue) {
-    return lodash.get(target, keyFrom, defaultValue)
+  getVal (target,
+    keyFrom,
+    defaultValue) {
+    return lodash.get(target,
+      keyFrom,
+      defaultValue)
   },
 
   // sleep
@@ -191,12 +201,14 @@ let Data = {
     }
     lodash.forEach(arr, (str, idx) => {
       if (!lodash.isUndefined(str)) {
-        fn(str.trim ? str.trim() : str, idx)
+        fn(str.trim ? str.trim(): str, idx)
       }
     })
   },
 
-  regRet (reg, txt, idx) {
+  regRet (reg,
+    txt,
+    idx) {
     if (reg && txt) {
       let ret = reg.exec(txt)
       if (ret && ret[idx]) {

@@ -1,5 +1,7 @@
 import fs from 'node:fs'
-import {pluginApplications} from "./config/constant.js"
+import {
+  pluginApplications
+} from "./config/constant.js"
 
 if (!global.segment) {
   logger.warn(logger.red("! 未找到 segment，建议更新 Yunzai"))
@@ -33,4 +35,6 @@ logger.info(" ╱|、")
 logger.info("(˚ˎ 。7")
 logger.info(" |、˜〵")
 logger.info("じしˍ,)ノ")
-export { apps }
+export {
+  apps
+}
