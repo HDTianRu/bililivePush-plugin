@@ -33,7 +33,8 @@ export default class bilibili extends plugin {
         this.task = {
                 name: 'bililivePush',
                 fnc: () => this.livepush(),
-                cron: '10 */1 * * * *'
+                cron: '10 */1 * * * *',
+                log: false
             },
         this.e = e
         this.bili = new Bili()
