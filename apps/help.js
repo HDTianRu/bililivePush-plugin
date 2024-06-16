@@ -1,10 +1,10 @@
 import lodash from 'lodash'
 import fs from 'fs'
 import path from "path"
-import {helpCfg, helpList} from "../config/help.js"
-import HelpTheme from './help/HelpTheme.js'
-import {pluginResources} from "../config/constant.js"
 import render from "../model/render.js"
+import HelpTheme from './help/HelpTheme.js'
+import {helpCfg, helpList} from "../config/help.js"
+import {pluginResources} from "../config/constant.js"
 
 const helpPath = path.join(pluginResources,"help")
 
