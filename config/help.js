@@ -44,7 +44,7 @@ export const helpList = [{
   list: [{
     icon: 132,
     title: '#设置b站ck',
-    desc: '私聊使用，设置SESSDATA'
+    desc: '私聊使用，设置SESSDATA，详见README.md'
   },
     {
       icon: 85,

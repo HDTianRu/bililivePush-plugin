@@ -28,6 +28,12 @@ pnpm install
 #取消订阅13579
 ```
 
+### 获取b站ck
+1.启用httpcancry，reqable，proxypin等抓包工具  
+2.在安卓端b站随便浏览一下  
+3.搜索SESSDATA，找到值为SESSDATA=****的cookie  
+4.私聊使用#设置b站ck
+
 ### 其他
 交流群：[893157055](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=BWtOJkAHVX20OlQqgAIPn7UID9LtigSg&group_code=893157055)  
 有问题提issue  

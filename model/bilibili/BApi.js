@@ -6,7 +6,7 @@ class BApi {
     return new Promise(async (resolve, reject) => {
       new networks( {
         url: `https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${room_id}`, headers: {
-          Cooke: ck
+          cookie: ck
         }, type: 'json'
       }).getData().then(res => {
         if (res.code == 0) {
