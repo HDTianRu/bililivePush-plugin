@@ -1,5 +1,6 @@
 import lodash from 'lodash'
 import fs from 'fs'
+import path from 'path'
 import {
   _path,
   pluginName
@@ -7,9 +8,9 @@ import {
 
 const getRoot = (root = '') => {
   if (root === 'root' || root === 'yunzai') {
-    root = `${_path}/`
+    root = _path
   } else if (!root) {
-    root = `${_path}/plugins/${pluginName}/data`
+    root = path.join(_path, 'plugins', pluginName, 'data')
   }
   return root
 }
@@ -19,14 +20,14 @@ let Data = {
   /*
   * 根据指定的path依次检查与创建目录
   * */
-  createDir (path = '', root = '', includeFile = false) {
+  createDir (dir = '', root = '', includeFile = false) {
     root = getRoot(root)
-    let pathList = path.split('/')
+    let pathList = dir.split('/')
     let nowPath = root
     pathList.forEach((name, idx) => {
       name = name.trim()
       if (idx < pathList.length - (includeFile ? 1: 0)) {
-        nowPath += '/' + name
+        nowPath = path.join(nowPath, name)
         if (name) {
           if (!fs.existsSync(nowPath)) {
             fs.mkdirSync(nowPath)
@@ -36,13 +37,14 @@ let Data = {
     })
   },
 
-
   read (file = '',
     root = '') {
     root = getRoot(root)
-    if (!fs.existsSync(`${root}/${file}`)) return ''
+    const filePath = path.join(root,
+      file)
+    if (!fs.existsSync(filePath)) return ''
     try {
-      return fs.readFileSync(`${root}/${file}`, 'utf8')
+      return fs.readFileSync(filePath, 'utf8')
     } catch (e) {
       console.log(e)
     }
@@ -52,7 +54,7 @@ let Data = {
     // 检查并创建目录
     Data.createDir(file, root, true)
     root = getRoot(root)
-    return fs.writeFileSync(`${root}/${file}`, data)
+    return fs.writeFileSync(path.join(root, file), data)
   },
 
   /*
@@ -60,7 +62,8 @@ let Data = {
   * */
   readJSON (file = '', root = '') {
     try {
-      return JSON.parse(Data.read(`${file}.json`, root))
+      let fileContent = Data.read(`${file}.json`, root) || "{}"
+      return JSON.parse(fileContent)
     } catch (e) {
       console.log(e)
     }
@@ -71,7 +74,7 @@ let Data = {
   * 写JSON
   * */
   writeJSON (file, data, space = '\t', root = '') {
-    return Data.write(`${file}.json`, JSON.stringify(data, null, space), root)
+    return Data.write(`${file}.json`, JSON.stringify(data || {}, null, space), root)
   },
 
   async getCacheJSON (key) {
@@ -97,9 +100,10 @@ let Data = {
     if (!/\.js$/.test(file)) {
       file = file + '.js'
     }
-    if (fs.existsSync(`${root}/${file}`)) {
+    const filePath = path.join(root, file)
+    if (fs.existsSync(filePath)) {
       try {
-        let data = await import(`file://${root}/${file}?t=${new Date() * 1}`)
+        let data = await import(`file://${filePath}?t=${new Date() * 1}`)
         return data || {}
       } catch (e) {
         console.log(e)
@@ -114,12 +118,12 @@ let Data = {
   },
 
   async import (name) {
-    return await Data.importModule(`components/optional-lib/${name}.js`)
+    return await Data.importModule(path.join('components', 'optional-lib', `${name}.js`))
   },
 
   async importCfg (key) {
-    let sysCfg = await Data.importModule(`config/system/${key}_system.js`)
-    let diyCfg = await Data.importModule(`config/${key}.js`)
+    let sysCfg = await Data.importModule(path.join('config', 'system', `${key}_system.js`))
+    let diyCfg = await Data.importModule(path.join('config', `${key}.js`))
     if (diyCfg.isSys) {
       console.error(`${pluginName}: config/${key}.js无效，已忽略`)
       console.error(`如需配置请复制config/${key}_default.js为config/${key}.js，请勿复制config/system下的系统文件`)
