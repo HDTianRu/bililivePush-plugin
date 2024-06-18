@@ -7,10 +7,6 @@ export default class bilibili extends plugin {
       name: 'bilibili',
       priority: 25,
       rule: [{
-        reg: '^#(强制)?设置b站ck',
-        fnc: 'setCk'
-      },
-        {
           reg: '^#(全体)?订阅直播间',
           fnc: 'setLivePush'
         },
@@ -35,28 +31,6 @@ export default class bilibili extends plugin {
     },
     this.e = e
     this.bili = new Bili()
-  }
-
-
-  async setCk(e) {
-    if (!e.isMaster) return true
-    if (e.isGroup && !e.msg.includes("强制")) {
-      e.reply("请私聊发送cookie")
-      return true
-    }
-    e.reply("请发送b站cookie")
-    this.setContext('getBcookie', true, 120)
-  }
-
-  async getBcookie() {
-    this.finish('getBcookie')
-    let msg = this.e.msg
-    if (!(msg && msg.includes("SESSDATA"))) {
-      this.e.reply("cookie格式不正确!")
-      return true
-    }
-    this.bili.setCK(msg)
-    this.e.reply("cookie设置成功!")
   }
 
   async setLivePush(e) {

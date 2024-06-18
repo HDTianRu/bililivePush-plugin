@@ -2,11 +2,10 @@ import networks from "../networks.js"
 
 
 class BApi {
-  async getRoomInfo(room_id, ck) {
+  async getRoomInfo(room_id) {
     return new Promise(async (resolve, reject) => {
       new networks( {
         url: `https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${room_id}`, headers: {
-          cookie: ck
         }, type: 'json'
       }).getData().then(res => {
         if (res.code == 0) {

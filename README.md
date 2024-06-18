@@ -15,7 +15,6 @@ pnpm install
 |指令|功能|
 |-------|-------|
 |#推送帮助|换个方式展示这些功能|
-|#设置b站ck|设置b站cookie|
 |#订阅/取消订阅直播间+直播间room_id|如题|
 |#订阅/取消订阅UP+UP的uid|同上(一般用这个)|
 |Tips|如需艾特全体，指令前加"全体"二字"|
@@ -27,12 +26,6 @@ pnpm install
 #全体取消订阅12345
 #取消订阅13579
 ```
-
-### 获取b站ck
-1.启用httpcancry，reqable，proxypin等抓包工具  
-2.在安卓端b站随便浏览一下  
-3.搜索SESSDATA，找到值为SESSDATA=****的cookie  
-4.私聊使用#设置b站ck
 
 ### 其他
 交流群：[893157055](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=BWtOJkAHVX20OlQqgAIPn7UID9LtigSg&group_code=893157055)  

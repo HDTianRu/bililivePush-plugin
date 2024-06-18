@@ -3,17 +3,6 @@ import BApi from './bilibili/BApi.js'
 
 export default class Bili {
   constructor() {
-    this.ck = Data.read('bilibili/biliCK')
-  }
-
-  setCK(data) {
-    Data.write('bilibili/biliCK', data)
-    this.ck = data
-  }
-
-  getCK() {
-    this.ck = Data.read('bilibili/biliCK')
-    return this.ck
   }
 
   setBilibiLiveData(data) {
@@ -62,7 +51,7 @@ export default class Bili {
   }
 
   async getRoomInfo(room_id) {
-    return await BApi.getRoomInfo(room_id, this.ck ? this.ck: this.getCK())
+    return await BApi.getRoomInfo(room_id)
   }
 
   async getRoomInfoByUid(mid) {
