@@ -7,7 +7,7 @@ try {
   logger.error(`[${pluginName}]未获取到更新js ${logger.yellow("更新功能")} 将无法使用`)
 }
 
-export class Update extends plugin {
+export class update extends plugin {
   constructor() {
     super({
       name: "推送更新插件",
