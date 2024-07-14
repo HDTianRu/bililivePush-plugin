@@ -39,11 +39,11 @@ export const helpList = [{
       title: 'Tips',
       desc: '如需艾特全体，指令前加"全体"二字'
     }]
-}/*, {
+}, {
   group: '管理命令，仅主人可用',
   list: [{
       icon: 85,
       title: '#(强制)更新推送插件',
       desc: '更新插件本体(还没做)'
     }]
-}*/]
+}]
