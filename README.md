@@ -1,8 +1,5 @@
 ## bililivePush-plugin
 
-### 简洁易用的b站直播推送插件
-本插件部分源码由[reset-qianyu-plugin](https://gitee.com/think-first-sxs/reset-qianyu-plugin)中分离出来，并由我自己的喜好进行修改，简化并优化代码结构，用于自用
-
 ### 安装
 ```
 cd plugins
@@ -17,6 +14,7 @@ pnpm install
 |#推送帮助|换个方式展示这些功能|
 |#订阅/取消订阅直播间+直播间room_id|如题|
 |#订阅/取消订阅UP+UP的uid|同上(一般用这个)|
+|#推送插件更新|如题|
 |Tips|如需艾特全体，指令前加"全体"二字"|
 
 ### 例子
