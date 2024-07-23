@@ -47,9 +47,9 @@ let HelpTheme = {
       body{background-image:url(${theme.bg});width:${width}px;}
       .container{background-image:url(${theme.main});width:${width}px;}
       .help-table .td,.help-table .th{width:${100 / colCount}%}
-      `]
+    `]
     let css = function (sel, css, key, def, fn) {
-      let val = Data.def(themeStyle[key], style[key])
+      let val = Data.def(themeStyle[key], style[key], def)
       if (fn) {
         val = fn(val)
       }
