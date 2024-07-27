@@ -2,8 +2,7 @@ import Data from './Data.js'
 import BApi from './bilibili/BApi.js'
 
 export default class Bili {
-  constructor() {
-  }
+  constructor() {}
 
   setBilibiLiveData(data) {
     let livedata = this.getBilibiLiveData()
@@ -51,10 +50,62 @@ export default class Bili {
   }
 
   async getRoomInfo(room_id) {
-    return await BApi.getRoomInfo(room_id)
+    const {
+      uid,
+      attention,
+      online,
+      description,
+      live_status,
+      user_cover,
+      live_time,
+      title
+    } = await BApi.getRoomInfo(room_id)
+    const {
+      uname,
+      face
+    } = await BApi.getRoomInfobyUid(uid)
+    return {
+      uid,
+      room_id,
+      attention,
+      online,
+      description,
+      live_status,
+      user_cover,
+      live_time,
+      title,
+      uname,
+      face
+    }
   }
 
-  async getRoomInfoByUid(mid) {
-    return await BApi.getRoomInfobyMid(mid)
+  async getRoomInfoByUid(uid) {
+    const {
+      room_id,
+      uname,
+      face
+    } = await BApi.getRoomInfobyUid(uid)
+    const {
+      attention,
+      online,
+      description,
+      live_status,
+      user_cover,
+      live_time,
+      title
+    } = await BApi.getRoomInfo(room_id)
+    return {
+      uid,
+      room_id,
+      attention,
+      online,
+      description,
+      live_status,
+      user_cover,
+      live_time,
+      title,
+      uname,
+      face
+    }
   }
 }
