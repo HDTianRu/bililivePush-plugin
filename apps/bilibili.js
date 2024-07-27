@@ -7,9 +7,9 @@ export default class bilibili extends plugin {
       name: 'bilibili',
       priority: 25,
       rule: [{
-          reg: '^#(全体)?订阅直播间',
-          fnc: 'setLivePush'
-        },
+        reg: '^#(全体)?订阅直播间',
+        fnc: 'setLivePush'
+      },
         {
           reg: '^#(全体)?取消订阅直播间',
           fnc: 'delLivePush'
@@ -116,12 +116,16 @@ export default class bilibili extends plugin {
       let room_id = l.room_id
       let {
         uid,
+        room_id,
         attention,
         online,
+        description,
         live_status,
         user_cover,
         live_time,
-        title
+        title,
+        uname,
+        face
       } = await this.bili.getRoomInfo(room_id)
       let grouplist = Object.keys(l.group)
       for (let g of grouplist) {
@@ -131,7 +135,7 @@ export default class bilibili extends plugin {
           redis.set(`bilibili_live_${room_id}_${g}`, JSON.stringify({
             live_time: live_time
           }))
-          Bot.pickGroup(Number(g)).sendMsg([...userlist, segment.image(user_cover), `标题：${title}\n`, `用户uid：${uid}\n`, `关注数量：${attention}\n`, `观看人数: ${online}\n`, `直播时间：${live_time}\n`, `直播间地址：https://live.bilibili.com/${room_id}`])
+          Bot.pickGroup(Number(g)).sendMsg([...userlist, segment.image(user_cover), `昵称:  ${uname}`, `标题：${title}\n`, `用户uid：${uid}\n`, `关注数量：${attention}\n`, `观看人数: ${online}\n`, `直播时间：${live_time}\n`, `直播间地址：https://live.bilibili.com/${room_id}`])
         } else if (live_status == 0 && isSendMsg) {
           isSendMsg = JSON.parse(isSendMsg)
           Bot.pickGroup(Number(g)).sendMsg([segment.image(user_cover), '主播下播la~~~~\n', `本次直播时长：${this.getDealTime(moment(isSendMsg.live_time), moment())}`])
