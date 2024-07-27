@@ -12,7 +12,6 @@ class BApi {
     }
     const {
       uid,
-      room_id,
       attention,
       online,
       description,
