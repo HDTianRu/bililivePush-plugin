@@ -116,7 +116,6 @@ export default class bilibili extends plugin {
       let room_id = l.room_id
       let {
         uid,
-        room_id,
         attention,
         online,
         description,
