@@ -78,8 +78,7 @@ export default class bilibili extends plugin {
       return e.reply("uid格式不对！请输入数字！")
     }
     let room_id = (await this.bili.getRoomInfoByUid(uid)).room_id
-    let result = await this.bili.getRoomInfo(room_id)
-    if (!result?.uid) {
+    if (!room_id) {
       return e.reply("不存在该直播间！")
     }
     let data = {
