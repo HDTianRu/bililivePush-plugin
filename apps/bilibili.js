@@ -43,12 +43,12 @@ export default class bilibili extends plugin {
     let msg = []
     if (/.*群.*/.test(e.msg)) {
       ret = Bili.listLiveData({
-        e.group_id
+        group_id: e.group_id
       })
       key = 'users'
     } else if (/.*我.*/.test(e.msg)) {
       ret = Bili.listLiveData({
-        e.user_id
+        user_id: e.user_id
       })
       key = 'groups'
     }
