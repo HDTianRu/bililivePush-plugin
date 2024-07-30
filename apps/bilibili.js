@@ -60,12 +60,13 @@ export default class bilibili extends plugin {
     }
     let result = this.bili.getBilibiLiveData()
 
-    if (!result[room_id] || !result[room_id].group[e.group_id] || !result[room_id].group[e.group_id].includes(e.user_id)) {
+    if (!result[room_id]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
 
     this.bili.delBilibiLiveData({
       room_id: room_id,
+      group_id: e.group_id,
       user_id: e.user_id
     })
     return e.reply("取消直播间订阅成功！")
@@ -98,12 +99,13 @@ export default class bilibili extends plugin {
     }
     let room_id = (await this.bili.getRoomInfoByUid(uid)).room_id
     let result = this.bili.getBilibiLiveData()
-    if (!result[room_id] || !result[room_id].group[e.group_id] || !result[room_id].group[e.group_id].includes(e.user_id)) {
+    if (!result[room_id]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
 
     this.bili.delBilibiLiveData({
       room_id: room_id,
+      group_id: e.group_id,
       user_id: e.user_id
     })
     return e.reply("取消直播间订阅成功！")
