@@ -69,7 +69,7 @@ class Bili {
       return result
     }
     const byUser = (user_id) => {
-      const livedata = this.getBilibiLiveData()
+      const livedata = this.getLiveData()
       const result = []
       for (const [room_id, roomData] of Object.entries(livedata)) {
         if (roomData.group) {
