@@ -35,7 +35,6 @@ export default class bilibili extends plugin {
       log: false
     },
     this.e = e
-    this.bili = new Bili()
   }
 
   async listLivePush(e) {
@@ -59,7 +58,7 @@ export default class bilibili extends plugin {
         attention,
         uname,
         face
-      } = await this.bili.getRoomInfo(item.room_id)
+      } = await Bili.getRoomInfo(item.room_id)
       msg.push([segment.image(face), `昵称: ${uname}\n`, `用户uid${uid}\n`, `粉丝: ${attention}\n`, `订阅${key}:\n${item[key].join('\n')}`].join('\n'))
     }
     msg = await common.makeForwardMsg(e, msg)
@@ -73,7 +72,7 @@ export default class bilibili extends plugin {
     if (isNaN(room_id)) {
       return e.reply("直播间id格式不对！请输入数字！")
     }
-    let result = await this.bili.getRoomInfo(room_id)
+    let result = await Bili.getRoomInfo(room_id)
     if (!result?.uid) {
       return e.reply("不存在该直播间！")
     }
@@ -82,7 +81,7 @@ export default class bilibili extends plugin {
       group_id: e.group_id,
       user_id: e.user_id
     }
-    this.bili.setLiveData(data)
+    Bili.setLiveData(data)
     return e.reply("直播间订阅成功！")
   }
 
@@ -92,13 +91,13 @@ export default class bilibili extends plugin {
     if (isNaN(room_id)) {
       return e.reply("直播间id格式不对！请输入数字！")
     }
-    let result = this.bili.getLiveData()
+    let result = Bili.getLiveData()
 
     if (!result[room_id]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
 
-    this.bili.delLiveData({
+    Bili.delLiveData({
       room_id: room_id,
       group_id: e.group_id,
       user_id: e.user_id
@@ -112,7 +111,7 @@ export default class bilibili extends plugin {
     if (isNaN(uid)) {
       return e.reply("uid格式不对！请输入数字！")
     }
-    let room_id = (await this.bili.getRoomInfoByUid(uid)).room_id
+    let room_id = (await Bili.getRoomInfoByUid(uid)).room_id
     if (!room_id) {
       return e.reply("不存在该直播间！")
     }
@@ -121,7 +120,7 @@ export default class bilibili extends plugin {
       group_id: e.group_id,
       user_id: e.user_id
     }
-    this.bili.setLiveData(data)
+    Bili.setLiveData(data)
     return e.reply("直播间订阅成功！")
   }
 
@@ -131,13 +130,13 @@ export default class bilibili extends plugin {
     if (isNaN(uid)) {
       return e.reply("uid格式不对！请输入数字！")
     }
-    let room_id = (await this.bili.getRoomInfoByUid(uid)).room_id
-    let result = this.bili.getLiveData()
+    let room_id = (await Bili.getRoomInfoByUid(uid)).room_id
+    let result = Bili.getLiveData()
     if (!result[room_id]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
 
-    this.bili.delLiveData({
+    Bili.delLiveData({
       room_id: room_id,
       group_id: e.group_id,
       user_id: e.user_id
@@ -146,7 +145,7 @@ export default class bilibili extends plugin {
   }
 
   async livepush() {
-    let liveData = this.bili.getLiveData()
+    let liveData = Bili.getLiveData()
     liveData = Object.values(liveData)
     for (let l of liveData) {
       let room_id = l.room_id
@@ -160,7 +159,7 @@ export default class bilibili extends plugin {
         title,
         uname,
         face
-      } = await this.bili.getRoomInfo(room_id)
+      } = await Bili.getRoomInfo(room_id)
       let grouplist = Object.keys(l.group)
       for (let g of grouplist) {
         let isSendMsg = await redis.get(`bilibili_live_${room_id}_${g}`)

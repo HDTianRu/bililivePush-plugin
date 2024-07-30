@@ -1,7 +1,7 @@
 import Data from './Data.js'
 import BApi from './bilibili/BApi.js'
 
-export default class Bili {
+class Bili {
   constructor() {}
 
   getLiveData() {
@@ -150,3 +150,5 @@ export default class Bili {
     }
   }
 }
+
+export default new Bili()
