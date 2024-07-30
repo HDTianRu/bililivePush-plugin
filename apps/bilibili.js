@@ -59,7 +59,7 @@ export default class bilibili extends plugin {
         uname,
         face
       } = await Bili.getRoomInfo(item.room_id)
-      msg.push([segment.image(face), `昵称: ${uname}\n`, `用户uid${uid}\n`, `粉丝: ${attention}\n`, `订阅${key}:\n${item[key].join('\n')}`].join('\n'))
+      msg.push([segment.image(face), `昵称: ${uname}\n`, `用户uid${uid}\n`, `粉丝: ${attention}\n`, `订阅${key}:\n${item[key].join('\n')}`])
     }
     msg = await common.makeForwardMsg(e, msg)
     e.reply(msg)
