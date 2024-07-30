@@ -4,47 +4,48 @@ import BApi from './bilibili/BApi.js'
 export default class Bili {
   constructor() {}
 
-  setBilibiLiveData(data) {
-    let livedata = this.getBilibiLiveData()
-    if (livedata[data.room_id]) {
-      livedata[data.room_id] = {
-        room_id: data.room_id,
-      }
-      if (livedata[data.room_id].group != null && Object.keys(livedata[data.room_id].group).includes(data.group_id)) {
-        livedata[data.room_id].group[data.group_id] = [...livedata[data.room_id].group[data.group_id],
-          data.user_id]
-      } else {
-        livedata[data.room_id].group = {}
-        livedata[data.room_id].group[data.group_id] = [data.user_id]
-      }
-    } else {
-      livedata[data.room_id] = {
-        room_id: data.room_id,
-        group: {}
-      }
-      livedata[data.room_id].group[data.group_id] = [data.user_id]
-    }
-    Data.writeJSON('bilibili/live', livedata)
-  }
-
   getBilibiLiveData() {
     return Data.readJSON('bilibili/live') || {}
   }
 
-  delBilibiLiveData(data) {
-    let livedata = this.getBilibiLiveData()
-    let groupList = Object.keys(livedata[data.room_id].group)
-    let group = livedata[data.room_id].group
-    if (groupList.length == 1 && group[groupList[0]].length == 1 && group[groupList[0]][0] === data.user_id) {
-      delete livedata[data.room_id]
-      groupList = []
-    }
-    for (let r of groupList) {
-      if (group[r].length == 1 && group[r][0] === data.user_id) {
-        delete livedata[data.room_id].group[r]
-      } else {
-        livedata[data.room_id].group[r] = group[r].filter(item => item !== data.user_id)
+  setBilibiLiveData(data) {
+    const livedata = this.getBilibiLiveData()
+    const {
+      room_id,
+      group_id,
+      user_id
+    } = data
+    if (!livedata[room_id]) {
+      livedata[room_id] = {
+        room_id,
+        group: {}
       }
+    }
+    if (!livedata[room_id].group[group_id]) {
+      livedata[room_id].group[group_id] = []
+    }
+    if (!livedata[room_id].group[group_id].includes(user_id)) {
+      livedata[room_id].group[group_id].push(user_id)
+    }
+    Data.writeJSON('bilibili/live', livedata)
+  }
+
+  delBilibiLiveData(data) {
+    const livedata = this.getBilibiLiveData()
+    const {
+      room_id,
+      group_id,
+      user_id
+    } = data
+    const group = livedata[room_id].group
+    if (group[group_id]) {
+      group[group_id] = group[group_id].filter(id => id !== user_id)
+      if (group[group_id].length === 0) {
+        delete group[group_id]
+      }
+    }
+    if (Object.keys(group).length === 0) {
+      delete livedata[room_id]
     }
     Data.writeJSON('bilibili/live', livedata)
   }
