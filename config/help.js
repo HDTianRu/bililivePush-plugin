@@ -38,6 +38,11 @@ export const helpList = [{
       icon: 74,
       title: 'Tips',
       desc: '如需艾特全体，指令前加"全体"二字'
+    },
+    {
+      icon: 74,
+      title: '#[本群|我的]订阅列表',
+      desc: '如题'
     }]
 }, {
   group: '管理命令，仅主人可用',
