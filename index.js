@@ -3,11 +3,6 @@ import {
   pluginApplications
 } from "./config/constant.js"
 
-if (!global.segment) {
-  logger.warn(logger.red("! 未找到 segment，建议更新 Yunzai"))
-  global.segment = (await import("oicq")).segment
-}
-
 const files = fs.readdirSync(pluginApplications).filter(file => file.endsWith('.js'))
 
 let ret = []
@@ -35,6 +30,4 @@ logger.info(" ╱|、")
 logger.info("(˚ˎ 。7")
 logger.info(" |、˜〵")
 logger.info("じしˍ,)ノ")
-export {
-  apps
-}
+export { apps }
