@@ -4,12 +4,12 @@ import BApi from './bilibili/BApi.js'
 export default class Bili {
   constructor() {}
 
-  getBilibiLiveData() {
+  getLiveData() {
     return Data.readJSON('bilibili/live') || {}
   }
 
-  setBilibiLiveData(data) {
-    const livedata = this.getBilibiLiveData()
+  setLiveData(data) {
+    const livedata = this.getLiveData()
     const {
       room_id,
       group_id,
@@ -30,8 +30,8 @@ export default class Bili {
     Data.writeJSON('bilibili/live', livedata)
   }
 
-  delBilibiLiveData(data) {
-    const livedata = this.getBilibiLiveData()
+  delLiveData(data) {
+    const livedata = this.getLiveData()
     const {
       room_id,
       group_id,
@@ -50,12 +50,55 @@ export default class Bili {
     Data.writeJSON('bilibili/live', livedata)
   }
 
+  listLiveData(data) {
+    const {
+      group_id,
+      user_id
+    } = data
+    const byGroup = (group_id) => {
+      const livedata = this.getLiveData()
+      const result = []
+      for (const [room_id, roomData] of Object.entries(livedata)) {
+        if (roomData.group && roomData.group[group_id]) {
+          result.push({
+            room_id,
+            users: roomData.group[group_id]
+          })
+        }
+      }
+      return result
+    }
+    const byUser = (user_id) => {
+      const livedata = this.getBilibiLiveData()
+      const result = []
+      for (const [room_id, roomData] of Object.entries(livedata)) {
+        if (roomData.group) {
+          const groupsInRoom = []
+          for (const [group_id, users] of Object.entries(roomData.group)) {
+            if (users.includes(user_id)) {
+              groupsInRoom.push(group_id)
+            }
+          }
+          if (groupsInRoom.length > 0) {
+            result.push({
+              room_id: parseInt(room_id),
+              groups: groupsInRoom
+            })
+          }
+        }
+      }
+      return result
+    }
+    if (group_id) return byGroup(group_id)
+    if (user_id) return byUser(user_id)
+    return false
+  }
+
   async getRoomInfo(room_id) {
     const {
       uid,
       attention,
       online,
-      description,
       live_status,
       user_cover,
       live_time,
@@ -70,7 +113,6 @@ export default class Bili {
       room_id,
       attention,
       online,
-      description,
       live_status,
       user_cover,
       live_time,
@@ -89,7 +131,6 @@ export default class Bili {
     const {
       attention,
       online,
-      description,
       live_status,
       user_cover,
       live_time,
@@ -100,7 +141,6 @@ export default class Bili {
       room_id,
       attention,
       online,
-      description,
       live_status,
       user_cover,
       live_time,

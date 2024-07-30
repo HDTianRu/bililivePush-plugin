@@ -1,5 +1,6 @@
 import Bili from '../model/bilibili.js'
 import moment from 'moment'
+import common from '../../../lib/common/common.js'
 
 export default class bilibili extends plugin {
   constructor(e) {
@@ -21,6 +22,10 @@ export default class bilibili extends plugin {
         {
           reg: '^#(全体)?取消订阅(up|UP|Up)(uid:|UID:)?',
           fnc: 'delLivePushByUid'
+        },
+        {
+          reg: '^#(本?群|我的?)订阅(列表|list)?',
+          fnc: 'listLivePush'
         }]
     })
     this.task = {
@@ -31,6 +36,35 @@ export default class bilibili extends plugin {
     },
     this.e = e
     this.bili = new Bili()
+  }
+
+  async listLivePush(e) {
+    let ret,
+    key
+    let msg = []
+    if (/.*群.*/.test(e.msg)) {
+      ret = Bili.listLiveData({
+        e.group_id
+      })
+      key = 'users'
+    } else if (/.*我.*/.test(e.msg)) {
+      ret = Bili.listLiveData({
+        e.user_id
+      })
+      key = 'groups'
+    }
+    for (const item of ret) {
+      let {
+        uid,
+        attention,
+        uname,
+        face
+      } = await this.bili.getRoomInfo(item.room_id)
+      msg.push([segment.image(face), `昵称: ${uname}\n`, `用户uid${uid}\n`, `粉丝: ${attention}\n`, `订阅${key}:\n${item[key].join('\n')}`].join('\n'))
+    }
+    msg = await common.makeForwardMsg(e, msg)
+    e.reply(msg)
+    return true
   }
 
   async setLivePush(e) {
@@ -48,7 +82,7 @@ export default class bilibili extends plugin {
       group_id: e.group_id,
       user_id: e.user_id
     }
-    this.bili.setBilibiLiveData(data)
+    this.bili.setLiveData(data)
     return e.reply("直播间订阅成功！")
   }
 
@@ -58,13 +92,13 @@ export default class bilibili extends plugin {
     if (isNaN(room_id)) {
       return e.reply("直播间id格式不对！请输入数字！")
     }
-    let result = this.bili.getBilibiLiveData()
+    let result = this.bili.getLiveData()
 
     if (!result[room_id]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
 
-    this.bili.delBilibiLiveData({
+    this.bili.delLiveData({
       room_id: room_id,
       group_id: e.group_id,
       user_id: e.user_id
@@ -87,7 +121,7 @@ export default class bilibili extends plugin {
       group_id: e.group_id,
       user_id: e.user_id
     }
-    this.bili.setBilibiLiveData(data)
+    this.bili.setLiveData(data)
     return e.reply("直播间订阅成功！")
   }
 
@@ -98,12 +132,12 @@ export default class bilibili extends plugin {
       return e.reply("uid格式不对！请输入数字！")
     }
     let room_id = (await this.bili.getRoomInfoByUid(uid)).room_id
-    let result = this.bili.getBilibiLiveData()
+    let result = this.bili.getLiveData()
     if (!result[room_id]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
 
-    this.bili.delBilibiLiveData({
+    this.bili.delLiveData({
       room_id: room_id,
       group_id: e.group_id,
       user_id: e.user_id
@@ -112,7 +146,7 @@ export default class bilibili extends plugin {
   }
 
   async livepush() {
-    let liveData = this.bili.getBilibiLiveData()
+    let liveData = this.bili.getLiveData()
     liveData = Object.values(liveData)
     for (let l of liveData) {
       let room_id = l.room_id
@@ -120,7 +154,6 @@ export default class bilibili extends plugin {
         uid,
         attention,
         online,
-        description,
         live_status,
         user_cover,
         live_time,
@@ -136,10 +169,10 @@ export default class bilibili extends plugin {
           redis.set(`bilibili_live_${room_id}_${g}`, JSON.stringify({
             live_time: live_time
           }))
-          Bot.pickGroup(Number(g)).sendMsg([...userlist, segment.image(user_cover), `昵称:  ${uname}\n`, `标题：${title}\n`, `用户uid：${uid}\n`, `关注数量：${attention}\n`, `观看人数: ${online}\n`, `直播时间：${live_time}\n`, `直播间地址：https://live.bilibili.com/${room_id}`])
+          Bot.pickGroup(Number(g)).sendMsg([...userlist, segment.image(user_cover), `昵称: ${uname}\n`, `标题: ${title}\n`, `用户uid: ${uid}\n`, `关注数量: ${attention}\n`, `观看人数: ${online}\n`, `直播时间: ${live_time}\n`, `直播间地址: https://live.bilibili.com/${room_id}`])
         } else if (live_status == 0 && isSendMsg) {
           isSendMsg = JSON.parse(isSendMsg)
-          Bot.pickGroup(Number(g)).sendMsg([segment.image(user_cover), '主播下播la~~~~\n', `本次直播时长：${this.getDealTime(moment(isSendMsg.live_time), moment())}`])
+          Bot.pickGroup(Number(g)).sendMsg([segment.image(user_cover), '主播下播la~~~~\n', `本次直播时长: ${this.getDealTime(moment(isSendMsg.live_time), moment())}`])
           redis.del(`bilibili_live_${room_id}_${g}`)
         }
       }
@@ -157,6 +190,4 @@ export default class bilibili extends plugin {
     str += tempTime.minutes() ? tempTime.minutes() + '分钟': ''
     return str
   }
-
-
 }
