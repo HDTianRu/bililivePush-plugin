@@ -145,11 +145,48 @@ export default class bilibili extends plugin {
   }
 
   async livepush() {
-    let liveData = Bili.getLiveData()
-    liveData = Object.values(liveData)
-    for (let l of liveData) {
-      let room_id = l.room_id
-      let {
+    const liveData = Object.values(Bili.getLiveData())
+
+    const sendLiveStartMessage = async (groupId, userIds, roomInfo) => {
+      const {
+        room_id,
+        user_cover,
+        uname,
+        title,
+        uid,
+        attention,
+        online,
+        live_time
+      } = roomInfo
+      const userMentions = userIds.map(item => segment.at(item))
+      const message = [
+        ...userMentions,
+        segment.image(user_cover),
+        `昵称: ${uname}\n`,
+        `标题: ${title}\n`,
+        `用户uid: ${uid}\n`,
+        `关注数量: ${attention}\n`,
+        `观看人数: ${online}\n`,
+        `直播时间: ${live_time}\n`,
+        `直播间地址: https://live.bilibili.com/${room_id}`
+      ]
+      await Bot.pickGroup(Number(groupId)).sendMsg(message)
+    }
+
+    const sendLiveEndMessage = async (groupId, roomInfo, savedInfo) => {
+      const { user_cover } = roomInfo
+      const liveDuration = this.getDealTime(moment(savedInfo.live_time), moment())
+      const message = [
+        segment.image(user_cover),
+        '主播下播la~~~~\n',
+        `本次直播时长: ${liveDuration}`
+      ]
+      await Bot.pickGroup(Number(groupId)).sendMsg(message)
+    }
+
+    for (const { room_id, group } of liveData) {
+      const roomInfo = await Bili.getRoomInfo(room_id)
+      const {
         uid,
         attention,
         online,
@@ -159,20 +196,20 @@ export default class bilibili extends plugin {
         title,
         uname,
         face
-      } = await Bili.getRoomInfo(room_id)
-      let grouplist = Object.keys(l.group)
-      for (let g of grouplist) {
-        let isSendMsg = await redis.get(`bilibili_live_${room_id}_${g}`)
+      } = roomInfo
+
+      for (const [groupId, userIds] of Object.entries(group)) {
+        const redisKey = `bilibili_live_${room_id}_${groupId}`
+        const isSendMsg = await redis.get(redisKey)
+
         if (live_status == 1 && !isSendMsg) {
-          let userlist = l.group[g].map(item => segment.at(item))
-          redis.set(`bilibili_live_${room_id}_${g}`, JSON.stringify({
-            live_time: live_time
+          await sendLiveStartMessage(groupId, userIds, roomInfo)
+          await redis.set(redisKey, JSON.stringify({
+            live_time
           }))
-          Bot.pickGroup(Number(g)).sendMsg([...userlist, segment.image(user_cover), `昵称: ${uname}\n`, `标题: ${title}\n`, `用户uid: ${uid}\n`, `关注数量: ${attention}\n`, `观看人数: ${online}\n`, `直播时间: ${live_time}\n`, `直播间地址: https://live.bilibili.com/${room_id}`])
         } else if (live_status == 0 && isSendMsg) {
-          isSendMsg = JSON.parse(isSendMsg)
-          Bot.pickGroup(Number(g)).sendMsg([segment.image(user_cover), '主播下播la~~~~\n', `本次直播时长: ${this.getDealTime(moment(isSendMsg.live_time), moment())}`])
-          redis.del(`bilibili_live_${room_id}_${g}`)
+          await sendLiveEndMessage(groupId, roomInfo, JSON.parse(isSendMsg))
+          await redis.del(redisKey)
         }
       }
     }
@@ -180,8 +217,8 @@ export default class bilibili extends plugin {
 
   getDealTime(stime, etime) {
     let str = ''
-    let dura = etime.format('x') - stime.format('x');
-    let tempTime = moment.duration(dura);
+    let dura = etime.format('x') - stime.format('x')
+    let tempTime = moment.duration(dura)
     str += tempTime.years() ? tempTime.years() + '年': ''
     str += tempTime.months() ? tempTime.months() + '月': ''
     str += tempTime.days() ? tempTime.days() + '日': ''
