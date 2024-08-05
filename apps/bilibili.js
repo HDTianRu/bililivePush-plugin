@@ -187,15 +187,8 @@ export default class bilibili extends plugin {
     for (const { room_id, group } of liveData) {
       const roomInfo = await Bili.getRoomInfo(room_id)
       const {
-        uid,
-        attention,
-        online,
         live_status,
-        user_cover,
-        live_time,
-        title,
-        uname,
-        face
+        live_time
       } = roomInfo
 
       for (const [groupId, userIds] of Object.entries(group)) {
@@ -207,7 +200,7 @@ export default class bilibili extends plugin {
           await redis.set(redisKey, JSON.stringify({
             live_time
           }))
-        } else if (live_status == 0 && isSendMsg) {
+        } else if (live_status == 0 && !!isSendMsg) {
           await sendLiveEndMessage(groupId, roomInfo, JSON.parse(isSendMsg))
           await redis.del(redisKey)
         }
