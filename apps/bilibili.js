@@ -200,7 +200,7 @@ export default class bilibili extends plugin {
           await redis.set(redisKey, JSON.stringify({
             live_time
           }))
-        } else if ((live_status == 0  || live_status == 2) && isSendMsg) {
+        } else if ((live_status == 0 || live_status == 2) && isSendMsg) {
           await sendLiveEndMessage(groupId, roomInfo, JSON.parse(isSendMsg))
           await redis.del(redisKey)
         }
