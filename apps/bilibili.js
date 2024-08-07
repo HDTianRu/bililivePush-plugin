@@ -173,9 +173,8 @@ export default class bilibili extends plugin {
       await Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
-    const sendLiveEndMessage = async (groupId, roomInfo, savedInfo) => {
+    const sendLiveEndMessage = async (groupId, roomInfo, liveDuration) => {
       const { user_cover } = roomInfo
-      const liveDuration = this.getDealTime(moment(savedInfo.live_time), moment())
       const message = [
         segment.image(user_cover),
         '主播下播la~~~~\n',
@@ -186,24 +185,32 @@ export default class bilibili extends plugin {
 
     for (const { room_id, group } of liveData) {
       const roomInfo = await Bili.getRoomInfo(room_id)
-      const {
-        live_status,
-        live_time
-      } = roomInfo
+      const { live_status } = roomInfo
 
-      for (const [groupId, userIds] of Object.entries(group)) {
-        const redisKey = `bilibili_live_${room_id}_${groupId}`
-        const isSendMsg = await redis.get(redisKey)
+      const redisKey = `bililive_${room_id}`
+      const storedData = await redis.get(redisKey)
+      const isSendMsg = !!storedData
 
-        if (live_status == 1 && !isSendMsg) {
+      if (live_status === 1 && !isSendMsg) {
+        const { live_time } = roomInfo
+        await redis.set(redisKey, JSON.stringify({
+          live_time
+        }))
+
+        for (const [groupId, userIds] of Object.entries(group)) {
           await sendLiveStartMessage(groupId, userIds, roomInfo)
-          await redis.set(redisKey, JSON.stringify({
-            live_time
-          }))
-        } else if ((live_status == 0 || live_status == 2) && isSendMsg) {
-          await sendLiveEndMessage(groupId, roomInfo, JSON.parse(isSendMsg))
-          await redis.del(redisKey)
         }
+      } else if (live_status === 0 && isSendMsg) {
+        const {
+          live_time
+        } = JSON.parse(storedData)
+        const liveDuration = this.getDealTime(moment(live_time), moment())
+
+        for (const [groupId] of Object.entries(group)) {
+          await sendLiveEndMessage(groupId, roomInfo, liveDuration)
+        }
+
+        await redis.del(redisKey)
       }
     }
   }
