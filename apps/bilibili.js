@@ -16,11 +16,11 @@ export default class bilibili extends plugin {
           fnc: 'delLivePush'
         },
         {
-          reg: '^#(全体)?订阅(up|UP|Up)(uid:|UID:)?',
+          reg: '^#(全体)?订阅(up|UP|Up|uid:|UID:)+',
           fnc: 'setLivePushByUid'
         },
         {
-          reg: '^#(全体)?取消订阅(up|UP|Up)(uid:|UID:)?',
+          reg: '^#(全体)?取消订阅(up|UP|Up|uid:|UID:)+',
           fnc: 'delLivePushByUid'
         },
         {
