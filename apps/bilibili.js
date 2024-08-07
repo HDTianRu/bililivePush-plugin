@@ -186,7 +186,8 @@ export default class bilibili extends plugin {
     for (const { room_id, group } of liveData) {
       const roomInfo = await Bili.getRoomInfo(room_id)
       const { live_status } = roomInfo
-      const data = await redis.get(`bililive_${room_id}`)
+      const redisKey = `bililive_${room_id}`
+      const data = await redis.get(redisKey)
 
       if (live_status === 1 && !data) {
         const { live_time } = roomInfo
