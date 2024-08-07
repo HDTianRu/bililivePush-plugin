@@ -170,7 +170,7 @@ export default class bilibili extends plugin {
         `直播时间: ${live_time}\n`,
         `直播间地址: https://live.bilibili.com/${room_id}`
       ]
-      await Bot.pickGroup(Number(groupId)).sendMsg(message)
+      Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
     const sendLiveEndMessage = async (groupId, roomInfo, liveDuration) => {
@@ -180,37 +180,32 @@ export default class bilibili extends plugin {
         '主播下播la~~~~\n',
         `本次直播时长: ${liveDuration}`
       ]
-      await Bot.pickGroup(Number(groupId)).sendMsg(message)
+      Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
     for (const { room_id, group } of liveData) {
       const roomInfo = await Bili.getRoomInfo(room_id)
       const { live_status } = roomInfo
+      const data = await redis.get(`bililive_${room_id}`)
 
-      const redisKey = `bililive_${room_id}`
-      const storedData = await redis.get(redisKey)
-      const isSendMsg = !!storedData
-
-      if (live_status === 1 && !isSendMsg) {
+      if (live_status === 1 && !data) {
         const { live_time } = roomInfo
-        await redis.set(redisKey, JSON.stringify({
+        redis.set(redisKey, JSON.stringify({
           live_time
         }))
 
         for (const [groupId, userIds] of Object.entries(group)) {
-          await sendLiveStartMessage(groupId, userIds, roomInfo)
+          sendLiveStartMessage(groupId, userIds, roomInfo)
         }
-      } else if (live_status === 0 && isSendMsg) {
-        const {
-          live_time
-        } = JSON.parse(storedData)
+      } else if (live_status === 0 && data) {
+        const { live_time } = JSON.parse(data)
         const liveDuration = this.getDealTime(moment(live_time), moment())
 
         for (const [groupId] of Object.entries(group)) {
-          await sendLiveEndMessage(groupId, roomInfo, liveDuration)
+          sendLiveEndMessage(groupId, roomInfo, liveDuration)
         }
 
-        await redis.del(redisKey)
+        redis.del(redisKey)
       }
     }
   }
