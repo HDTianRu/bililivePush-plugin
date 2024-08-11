@@ -8,19 +8,19 @@ export default class bilibili extends plugin {
       name: 'bilibili',
       priority: 25,
       rule: [{
-        reg: '^#(全体)?订阅直播间',
+        reg: '^#(全体|匿名)?订阅直播间',
         fnc: 'setLivePush'
       },
         {
-          reg: '^#(全体)?取消订阅直播间',
+          reg: '^#(全体|匿名)?取消订阅直播间',
           fnc: 'delLivePush'
         },
         {
-          reg: '^#(全体)?订阅(up|UP|Up|uid:|UID:)+',
+          reg: '^#(全体|匿名)?订阅(up|UP|Up|uid:|UID:)+',
           fnc: 'setLivePushByUid'
         },
         {
-          reg: '^#(全体)?取消订阅(up|UP|Up|uid:|UID:)+',
+          reg: '^#(全体|匿名)?取消订阅(up|UP|Up|uid:|UID:)+',
           fnc: 'delLivePushByUid'
         },
         {
@@ -59,7 +59,7 @@ export default class bilibili extends plugin {
         uname,
         face
       } = await Bili.getRoomInfo(item.room_id)
-      msg.push([segment.image(face), `昵称: ${uname}\n`, `用户uid${uid}\n`, `粉丝: ${attention}\n`, `订阅${key}:\n${item[key].join('\n')}`])
+      msg.push([segment.image(face), `昵称: ${uname}\n`, `用户uid${uid}\n`, `粉丝: ${attention}\n`, `订阅${key}:\n${item[key].map(item => (item == 99999) ? '匿名' : item).join('\n')}`])
     }
     msg = await common.makeForwardMsg(e, msg)
     e.reply(msg)
@@ -68,6 +68,7 @@ export default class bilibili extends plugin {
 
   async setLivePush(e) {
     if (/.*全体.*/.test(e.msg)) e.user_id = 0
+    if (/.*匿名.*/.test(e.msg)) e.user_id = 99999
     let room_id = /[0-9]+/.exec(e.msg)[0]
     if (isNaN(room_id)) {
       return e.reply("直播间id格式不对！请输入数字！")
@@ -87,6 +88,7 @@ export default class bilibili extends plugin {
 
   async delLivePush(e) {
     if (/.*全体.*/.test(e.msg)) e.user_id = 0
+    if (/.*匿名.*/.test(e.msg)) e.user_id = 99999
     let room_id = /[0-9]+/.exec(e.msg)[0]
     if (isNaN(room_id)) {
       return e.reply("直播间id格式不对！请输入数字！")
@@ -107,6 +109,7 @@ export default class bilibili extends plugin {
 
   async setLivePushByUid(e) {
     if (/.*全体.*/.test(e.msg)) e.user_id = 0
+    if (/.*匿名.*/.test(e.msg)) e.user_id = 99999
     let uid = /[0-9]+/.exec(e.msg)[0]
     if (isNaN(uid)) {
       return e.reply("uid格式不对！请输入数字！")
@@ -126,6 +129,7 @@ export default class bilibili extends plugin {
 
   async delLivePushByUid(e) {
     if (/.*全体.*/.test(e.msg)) e.user_id = 0
+    if (/.*匿名.*/.test(e.msg)) e.user_id = 99999
     let uid = /[0-9]+/.exec(e.msg)[0]
     if (isNaN(uid)) {
       return e.reply("uid格式不对！请输入数字！")
@@ -158,7 +162,7 @@ export default class bilibili extends plugin {
         online,
         live_time
       } = roomInfo
-      const userMentions = userIds.map(item => segment.at(item))
+      const userMentions = userIds.filter(item => item != 99999).map(item => segment.at(item))
       const message = [
         ...userMentions,
         segment.image(user_cover),
