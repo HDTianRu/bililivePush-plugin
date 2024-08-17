@@ -3,41 +3,48 @@ import BApi from './bilibili/BApi.js'
 
 class Bili {
   constructor() {}
+  
+  this.BApi = BApi
 
   getLiveData() {
     return Data.readJSON('bilibili/live') || {}
   }
 
   setLiveData(data) {
-    const livedata = this.getLiveData()
+    const data = this.getLiveData()
+    const livedata = data?.data
     const {
       room_id,
+      uid,
       group_id,
       user_id
     } = data
-    if (!livedata[room_id]) {
-      livedata[room_id] = {
-        room_id,
+    if (!livedata[uid]) {
+      livedata[uid] = {
+        uid,
         group: {}
       }
     }
-    if (!livedata[room_id].group[group_id]) {
-      livedata[room_id].group[group_id] = []
+    if (!livedata[uid].group[group_id]) {
+      livedata[uid].group[group_id] = []
     }
-    if (!livedata[room_id].group[group_id].includes(user_id)) {
-      livedata[room_id].group[group_id].push(user_id)
+    if (!livedata[uid].group[group_id].includes(user_id)) {
+      livedata[uid].group[group_id].push(user_id)
     }
-    Data.writeJSON('bilibili/live', livedata)
+    data.data = livedata
+    Data.writeJSON('bilibili/live', data)
   }
 
   delLiveData(data) {
-    const livedata = this.getLiveData()
+    const data = this.getLiveData()
+    const livedata = data?.data
     const {
       room_id,
+      uid,
       group_id,
       user_id
     } = data
-    const group = livedata[room_id].group
+    const group = livedata[uid].group
     if (group[group_id]) {
       group[group_id] = group[group_id].filter(id => id !== user_id)
       if (group[group_id].length === 0) {
@@ -45,9 +52,10 @@ class Bili {
       }
     }
     if (Object.keys(group).length === 0) {
-      delete livedata[room_id]
+      delete livedata[uid]
     }
-    Data.writeJSON('bilibili/live', livedata)
+    data.data = livedata
+    Data.writeJSON('bilibili/live', data)
   }
 
   listLiveData(data) {
@@ -56,12 +64,13 @@ class Bili {
       user_id
     } = data
     const byGroup = (group_id) => {
-      const livedata = this.getLiveData()
+      const livedata = this.getLiveData()?.data
       const result = []
-      for (const [room_id, roomData] of Object.entries(livedata)) {
+      for (const [room_id, uid, roomData] of Object.entries(livedata)) {
         if (roomData.group && roomData.group[group_id]) {
           result.push({
             room_id,
+            uid,
             users: roomData.group[group_id]
           })
         }
@@ -69,19 +78,20 @@ class Bili {
       return result
     }
     const byUser = (user_id) => {
-      const livedata = this.getLiveData()
+      const livedata = this.getLiveData()?.data
       const result = []
       for (const [room_id, roomData] of Object.entries(livedata)) {
         if (roomData.group) {
           const groupsInRoom = []
-          for (const [group_id, users] of Object.entries(roomData.group)) {
+          for (const [group_id, uid, users] of Object.entries(roomData.group)) {
             if (users.includes(user_id)) {
               groupsInRoom.push(group_id)
             }
           }
           if (groupsInRoom.length > 0) {
             result.push({
-              room_id: parseInt(room_id),
+              room_id,
+              uid,
               groups: groupsInRoom
             })
           }

@@ -1,4 +1,6 @@
 import { pluginName } from "../config/constant.js"
+import upgrade from '../model/upgrade.js'
+
 let Update = null
 try {
   Update = (await import("../../other/update.js").catch(e => null))?.update
@@ -24,6 +26,10 @@ export class update extends plugin {
         }
       ]
     })
+  }
+  
+  async init() {
+    await upgrade()
   }
 
   async update(e = this.e) {

@@ -57,9 +57,7 @@ class BApi {
   // }
   
   async getRoomInfobyUid(uid) {
-    const ret = await this.getRoomInfobyUids([uid])
-    if (!ret) return false
-    return ret[uid]
+    return (await this.getRoomInfobyUids([uid]))?.[uid]
   }
   
   async getRoomInfobyUids(uids) {
@@ -72,7 +70,7 @@ class BApi {
         'uids': uids.map(item => parseInt(item))
       }
     }
-    const response = await fetch(`https://api.live.bilibili.com/live_user/v1/Master/info?uid=${uid}`, params)
+    const response = await fetch('https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids', params)
     const res = await response.json()
     if (res.code !== 0) {
       logger.error(res.msg || res.message)
