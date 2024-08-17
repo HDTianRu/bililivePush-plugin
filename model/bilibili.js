@@ -22,6 +22,7 @@ class Bili {
     if (!livedata[uid]) {
       livedata[uid] = {
         uid,
+        room_id,
         group: {}
       }
     }
@@ -39,7 +40,6 @@ class Bili {
     const fullData = this.getLiveData()
     const livedata = fullData?.data
     const {
-      room_id,
       uid,
       group_id,
       user_id

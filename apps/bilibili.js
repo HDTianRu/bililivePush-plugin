@@ -107,7 +107,6 @@ export default class bilibili extends plugin {
     }
 
     Bili.delLiveData({
-      room_id,
       uid,
       group_id: e.group_id,
       user_id: e.user_id
@@ -122,7 +121,7 @@ export default class bilibili extends plugin {
     if (isNaN(uid)) {
       return e.reply("uid格式不对！请输入数字！")
     }
-    let {room_id, face, uname} = await Bili.getRoomInfo(room_id)
+    let {room_id, face, uname} = await Bili.getRoomInfoByUid(uid)
     if (!room_id) {
       return e.reply("不存在该直播间！")
     }
@@ -149,7 +148,7 @@ export default class bilibili extends plugin {
     }
 
     Bili.delLiveData({
-      room_id: room_id,
+      uid,
       group_id: e.group_id,
       user_id: e.user_id
     })
