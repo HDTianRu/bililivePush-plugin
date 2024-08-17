@@ -107,7 +107,6 @@ class Bili {
   async getRoomInfo(room_id) {
     const {
       uid,
-      attention,
       online,
       live_status,
       user_cover,
@@ -121,7 +120,6 @@ class Bili {
     return {
       uid,
       room_id,
-      attention,
       online,
       live_status,
       user_cover,
@@ -139,7 +137,6 @@ class Bili {
       face
     } = await BApi.getRoomInfobyUid(uid)
     const {
-      attention,
       online,
       live_status,
       user_cover,
@@ -149,7 +146,6 @@ class Bili {
     return {
       uid,
       room_id,
-      attention,
       online,
       live_status,
       user_cover,

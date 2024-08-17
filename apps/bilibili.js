@@ -55,7 +55,6 @@ export default class bilibili extends plugin {
     for (const item of ret) {
       let {
         uid,
-        attention,
         uname,
         face
       } = await Bili.getRoomInfo(item.room_id)
@@ -63,7 +62,6 @@ export default class bilibili extends plugin {
         segment.image(face),
         `昵称: ${uname}\n`,
         `用户uid: ${uid}\n`,
-        `粉丝: ${attention}\n`,
         `订阅${key}:\n${item[key].map(item => (item == 99999) ? '匿名' : item).join('\n')}`
       ])
     }
@@ -165,7 +163,6 @@ export default class bilibili extends plugin {
         uname,
         title,
         uid,
-        attention,
         online,
         live_time
       } = roomInfo
@@ -176,7 +173,6 @@ export default class bilibili extends plugin {
         `昵称: ${uname}\n`,
         `标题: ${title}\n`,
         `用户uid: ${uid}\n`,
-        `关注数量: ${attention}\n`,
         `观看人数: ${online}\n`,
         `直播时间: ${live_time}\n`,
         `直播间地址: https://live.bilibili.com/${room_id}`

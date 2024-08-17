@@ -12,7 +12,6 @@ class BApi {
     }
     const {
       uid,
-      attention,
       online,
       live_status,
       user_cover,
@@ -22,7 +21,6 @@ class BApi {
     return {
       uid,
       room_id,
-      attention,
       online,
       live_status,
       user_cover,
@@ -31,30 +29,30 @@ class BApi {
     }
   }
 
-  // async getRoomInfobyUid(uid) {
-    // const response = await fetch(`https://api.live.bilibili.com/live_user/v1/Master/info?uid=${uid}`, {
-      // headers: {},
-    // })
-    // const res = await response.json()
-    // if (res.code !== 0) {
-      // logger.error(res.msg || res.message)
-      // return false
-    // }
-    // const {
-      // room_id,
-      // info
-    // } = res.data
-    // const {
-      // uname,
-      // face
-    // } = info
-    // return {
-      // uid,
-      // room_id,
-      // uname,
-      // face
-    // }
-  // }
+  async getRoomInfobyUidOld(uid) {
+    const response = await fetch(`https://api.live.bilibili.com/live_user/v1/Master/info?uid=${uid}`, {
+      headers: {},
+    })
+    const res = await response.json()
+    if (res.code !== 0) {
+      logger.error(res.msg || res.message)
+      return false
+    }
+    const {
+      room_id,
+      info
+    } = res.data
+    const {
+      uname,
+      face
+    } = info
+    return {
+      uid,
+      room_id,
+      uname,
+      face
+    }
+  }
   
   async getRoomInfobyUid(uid) {
     return (await this.getRoomInfobyUids([uid]))?.[uid]
