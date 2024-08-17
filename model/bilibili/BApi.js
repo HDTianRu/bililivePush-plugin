@@ -66,9 +66,9 @@ class BApi {
       headers: {
         'Content-Type': 'application/json'
       },
-      data: {
+      body: JSON.stringify({
         'uids': uids.map(item => parseInt(item))
-      }
+      })
     }
     const response = await fetch('https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids', params)
     const res = await response.json()
