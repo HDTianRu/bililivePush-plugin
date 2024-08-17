@@ -67,7 +67,7 @@ class Bili {
       const livedata = this.getLiveData()?.data
       const result = []
       for (const {room_id, uid, group} of Object.values(livedata)) {
-        if (roomData?.group[group_id]) {
+        if (group[group_id]) {
           result.push({
             room_id,
             uid,
