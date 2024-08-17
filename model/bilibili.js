@@ -2,17 +2,17 @@ import Data from './Data.js'
 import BApi from './bilibili/BApi.js'
 
 class Bili {
-  constructor() {}
-  
-  this.BApi = BApi
+  constructor() {
+    this.BApi = BApi
+  }
 
   getLiveData() {
     return Data.readJSON('bilibili/live') || {}
   }
 
   setLiveData(data) {
-    const data = this.getLiveData()
-    const livedata = data?.data
+    const fullData = this.getLiveData()
+    const livedata = fullData?.data
     const {
       room_id,
       uid,
@@ -31,13 +31,13 @@ class Bili {
     if (!livedata[uid].group[group_id].includes(user_id)) {
       livedata[uid].group[group_id].push(user_id)
     }
-    data.data = livedata
-    Data.writeJSON('bilibili/live', data)
+    fullData.data = livedata
+    Data.writeJSON('bilibili/live', fullData)
   }
 
   delLiveData(data) {
-    const data = this.getLiveData()
-    const livedata = data?.data
+    const fullData = this.getLiveData()
+    const livedata = fullData?.data
     const {
       room_id,
       uid,
@@ -54,8 +54,8 @@ class Bili {
     if (Object.keys(group).length === 0) {
       delete livedata[uid]
     }
-    data.data = livedata
-    Data.writeJSON('bilibili/live', data)
+    fullData.data = livedata
+    Data.writeJSON('bilibili/live', fullData)
   }
 
   listLiveData(data) {
