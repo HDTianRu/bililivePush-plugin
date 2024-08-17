@@ -66,12 +66,12 @@ class Bili {
     const byGroup = (group_id) => {
       const livedata = this.getLiveData()?.data
       const result = []
-      for (const [room_id, uid, roomData] of Object.entries(livedata)) {
-        if (roomData.group && roomData.group[group_id]) {
+      for (const {room_id, uid, group} of Object.values(livedata)) {
+        if (roomData?.group[group_id]) {
           result.push({
             room_id,
             uid,
-            users: roomData.group[group_id]
+            users: group[group_id]
           })
         }
       }
@@ -80,10 +80,10 @@ class Bili {
     const byUser = (user_id) => {
       const livedata = this.getLiveData()?.data
       const result = []
-      for (const [room_id, roomData] of Object.entries(livedata)) {
-        if (roomData.group) {
+      for (const {room_id, uid, group} of Object.values(livedata)) {
+        if (group) {
           const groupsInRoom = []
-          for (const [group_id, uid, users] of Object.entries(roomData.group)) {
+          for (const [group_id, users] of Object.entries(group)) {
             if (users.includes(user_id)) {
               groupsInRoom.push(group_id)
             }
