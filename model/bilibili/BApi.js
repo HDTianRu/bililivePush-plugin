@@ -31,29 +31,54 @@ class BApi {
     }
   }
 
+  // async getRoomInfobyUid(uid) {
+    // const response = await fetch(`https://api.live.bilibili.com/live_user/v1/Master/info?uid=${uid}`, {
+      // headers: {},
+    // })
+    // const res = await response.json()
+    // if (res.code !== 0) {
+      // logger.error(res.msg || res.message)
+      // return false
+    // }
+    // const {
+      // room_id,
+      // info
+    // } = res.data
+    // const {
+      // uname,
+      // face
+    // } = info
+    // return {
+      // uid,
+      // room_id,
+      // uname,
+      // face
+    // }
+  // }
+  
   async getRoomInfobyUid(uid) {
-    const response = await fetch(`https://api.live.bilibili.com/live_user/v1/Master/info?uid=${uid}`, {
-      headers: {},
-    })
+    const ret = await this.getRoomInfobyUids([uid])
+    if (!ret) return false
+    return ret[uid]
+  }
+  
+  async getRoomInfobyUids(uids) {
+    const params = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        'uids': uids.map(item => parseInt(item))
+      }
+    }
+    const response = await fetch(`https://api.live.bilibili.com/live_user/v1/Master/info?uid=${uid}`, params)
     const res = await response.json()
     if (res.code !== 0) {
       logger.error(res.msg || res.message)
       return false
     }
-    const {
-      room_id,
-      info
-    } = res.data
-    const {
-      uname,
-      face
-    } = info
-    return {
-      uid,
-      room_id,
-      uname,
-      face
-    }
+    return res.data
   }
 }
 
