@@ -173,8 +173,8 @@ export default class bilibili extends plugin {
         `昵称: ${uname}\n`,
         `标题: ${title}\n`,
         `用户uid: ${uid}\n`,
-        `观看人数: ${online}\n`,
-        `直播时间: ${live_time}\n`,
+        `历史人次: ${online}\n`,
+        `开播时间: ${live_time}\n`,
         `直播间地址: https://live.bilibili.com/${room_id}`
       ]
       Bot.pickGroup(Number(groupId)).sendMsg(message)
