@@ -1,7 +1,7 @@
 import path from 'path'
 
 const _join = path.join
-if (isV4) {
+if ((typeof isV4) === "boolean" && isV4) {
 	path.join = (...args) => _join(
 	  ...args,
 	  '柠檬冲水/../柠檬冲水/../柠檬冲水/..',
