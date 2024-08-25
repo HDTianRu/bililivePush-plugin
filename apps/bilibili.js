@@ -191,9 +191,9 @@ export default class bilibili extends plugin {
       Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
-    for (const { room_id, group, ...roomInfo } of liveData) {
+    for (const { group, ...roomInfo } of liveData) {
       roomInfo.live_time *= 1000
-      const { live_status } = roomInfo
+      const { room_id, live_status } = roomInfo
       const redisKey = `bililive_${room_id}`
       const data = await redis.get(redisKey)
 
@@ -206,7 +206,7 @@ export default class bilibili extends plugin {
         for (const [groupId, userIds] of Object.entries(group)) {
           sendLiveStartMessage(groupId, userIds, roomInfo)
         }
-      } else if (live_status === 0 && data) {
+      } else if (live_status != 1 && data) {
         const { live_time } = JSON.parse(data)
         const liveDuration = this.getDealTime(moment(live_time), moment())
 
