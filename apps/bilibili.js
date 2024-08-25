@@ -88,7 +88,7 @@ export default class bilibili extends plugin {
       user_id: e.user_id
     }
     Bili.setLiveData(data)
-    return e.reply([segment.image(face), "直播间订阅成功！"])
+    return e.reply([segment.image(face), `${uname}直播间订阅成功！`])
   }
 
   async delLivePush(e) {
@@ -130,7 +130,7 @@ export default class bilibili extends plugin {
       user_id: e.user_id
     }
     Bili.setLiveData(data)
-    return e.reply([segment.image(face), "直播间订阅成功！"])
+    return e.reply([segment.image(face), `${uname}直播间订阅成功！`])
   }
 
   async delLivePushByUid(e) {
