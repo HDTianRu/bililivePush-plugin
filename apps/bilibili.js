@@ -165,15 +165,18 @@ export default class bilibili extends plugin {
         title,
         uid,
         online,
-        live_time
+        live_time,
+        area_v2_parent_name,
+        area_name
       } = roomInfo
       const userMentions = userIds.filter(item => item != 99999).map(item => segment.at(item))
       const message = [
         ...userMentions,
         segment.image(cover_from_user),
         `昵称: ${uname}\n`,
-        `标题: ${title}\n`,
         `用户uid: ${uid}\n`,
+        `标题: ${title}\n`,
+        `分区: ${area_v2_parent_name}-${area_name}\n`,
         `历史人次: ${online}\n`,
         `开播时间: ${moment(live_time).format('YYYY-MM-DD HH:mm:ss')}\n`,
         `直播间地址: https://live.bilibili.com/${room_id}`
