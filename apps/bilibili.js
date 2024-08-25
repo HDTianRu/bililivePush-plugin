@@ -154,12 +154,13 @@ export default class bilibili extends plugin {
   }
 
   async livepush() {
-    const liveData = Object.values(Bili.getLiveData()?.data)
+    let liveData = Object.values(Bili.getLiveData()?.data)
+    liveData = await Bili.setRoomInfo(liveData)
 
     const sendLiveStartMessage = async (groupId, userIds, roomInfo) => {
       const {
         room_id,
-        user_cover,
+        cover_from_user,
         uname,
         title,
         uid,
@@ -169,29 +170,29 @@ export default class bilibili extends plugin {
       const userMentions = userIds.filter(item => item != 99999).map(item => segment.at(item))
       const message = [
         ...userMentions,
-        segment.image(user_cover),
+        segment.image(cover_from_user),
         `昵称: ${uname}\n`,
         `标题: ${title}\n`,
         `用户uid: ${uid}\n`,
         `历史人次: ${online}\n`,
-        `开播时间: ${live_time}\n`,
+        `开播时间: ${moment(live_time).format('YYYY-MM-DD HH:mm:ss')}\n`,
         `直播间地址: https://live.bilibili.com/${room_id}`
       ]
       Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
     const sendLiveEndMessage = async (groupId, roomInfo, liveDuration) => {
-      const { user_cover } = roomInfo
+      const { cover_from_user } = roomInfo
       const message = [
-        segment.image(user_cover),
+        segment.image(cover_from_user),
         '主播下播la~~~~\n',
         `本次直播时长: ${liveDuration}`
       ]
       Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
-    for (const { room_id, group } of liveData) {
-      const roomInfo = await Bili.getRoomInfo(room_id)
+    for (const { room_id, group, ...roomInfo } of liveData) {
+      roomInfo.live_time *= 1000
       const { live_status } = roomInfo
       const redisKey = `bililive_${room_id}`
       const data = await redis.get(redisKey)

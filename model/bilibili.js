@@ -104,6 +104,16 @@ class Bili {
     return false
   }
 
+  async setRoomInfo(items) {
+    const uids = items.map(item => item.uid)
+    const ret = await BApi.getRoomInfobyUids(uids)
+    return items.map(item => {
+      const data = ret?.[item.uid]
+      if (!data) return
+      return { ...item, ...data }
+    })
+  }
+
   async getRoomInfo(room_id) {
     const {
       uid,
