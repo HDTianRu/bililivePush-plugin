@@ -38,8 +38,7 @@ export default class bilibili extends plugin {
   }
 
   async listLivePush(e) {
-    let ret,
-    key
+    let ret, key
     let msg = []
     if (/.*群.*/.test(e.msg)) {
       ret = Bili.listLiveData({
@@ -52,12 +51,7 @@ export default class bilibili extends plugin {
       })
       key = 'groups'
     }
-    for (const item of ret) {
-      let {
-        uid,
-        uname,
-        face
-      } = await Bili.getRoomInfo(item.room_id)
+    for (const { uid, uname, face, ...item } of ret) {
       msg.push([
         segment.image(face),
         `昵称: ${uname}\n`,
