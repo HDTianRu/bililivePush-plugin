@@ -59,7 +59,7 @@ export default class bilibili extends plugin {
         `订阅${key}:\n${item[key].map(item => (item == 99999) ? '匿名' : item).join('\n')}`
       ])
     }
-    msg = await common.makeForwardMsg(e, msg)
+    msg = !!msg.length ? await common.makeForwardMsg(e, msg) : '无'
     e.reply(msg)
     return true
   }
