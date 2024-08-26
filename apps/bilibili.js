@@ -51,6 +51,7 @@ export default class bilibili extends plugin {
       })
       key = 'groups'
     }
+    ret = await Bili.setRoomInfo(ret)
     for (const { uid, uname, face, ...item } of ret) {
       msg.push([
         segment.image(face),
