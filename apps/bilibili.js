@@ -226,6 +226,7 @@ export default class bilibili extends plugin {
     str += tempTime.days() ? tempTime.days() + '日': ''
     str += tempTime.hours() ? tempTime.hours() + '小时': ''
     str += tempTime.minutes() ? tempTime.minutes() + '分钟': ''
+    if (dura <= 5*60*1000) str += `\n(没关系的, ${str}也很厉害了)`
     return str
   }
 }
