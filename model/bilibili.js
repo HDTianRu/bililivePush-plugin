@@ -111,7 +111,7 @@ class Bili {
       const data = ret?.[item.uid]
       if (!data) return
       return { ...item, ...data }
-    })
+    }).filter(item => !!item)
   }
 
   async getRoomInfo(room_id) {
