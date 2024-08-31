@@ -8,23 +8,23 @@ export default class bilibili extends plugin {
       name: 'bilibili',
       priority: 25,
       rule: [{
-        reg: '^#(全体|匿名)?订阅直播间',
+        reg: '^#?(绝区零|星铁)?(全体|匿名)?订阅直播间',
         fnc: 'setLivePush'
       },
         {
-          reg: '^#(全体|匿名)?取消订阅直播间',
+          reg: '^#?(绝区零|星铁)?(全体|匿名)?取消订阅直播间',
           fnc: 'delLivePush'
         },
         {
-          reg: '^#(全体|匿名)?订阅(up|UP|Up|uid:|UID:)+',
+          reg: '^#?(绝区零|星铁)?(全体|匿名)?订阅(up|UP|Up|uid:|UID:)+',
           fnc: 'setLivePushByUid'
         },
         {
-          reg: '^#(全体|匿名)?取消订阅(up|UP|Up|uid:|UID:)+',
+          reg: '^#?(绝区零|星铁)?(全体|匿名)?取消订阅(up|UP|Up|uid:|UID:)+',
           fnc: 'delLivePushByUid'
         },
         {
-          reg: '^#(本?群|我的?)订阅(列表|list)?',
+          reg: '^#?(绝区零|星铁)?(本?群|我的?)订阅(列表|list)?',
           fnc: 'listLivePush'
         }]
     })
