@@ -164,7 +164,7 @@ export default class bilibili extends plugin {
         area_v2_parent_name,
         area_v2_name
       } = roomInfo
-      const userMentions = userIds.filter(item => item != 99999).map(item => segment.at(item))
+      const userMentions = userIds.filter(item => item != 99999).map(item => segment.at(item == 0 ? 'all' : item))
       const message = [
         ...userMentions,
         segment.image(cover_from_user),
