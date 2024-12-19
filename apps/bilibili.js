@@ -8,9 +8,9 @@ export default class bilibili extends plugin {
       name: 'bilibili',
       priority: 25,
       rule: [{
-        reg: '^#?(绝区零|星铁)?(全体|匿名)?订阅直播间',
-        fnc: 'setLivePush'
-      },
+          reg: '^#?(绝区零|星铁)?(全体|匿名)?订阅直播间',
+          fnc: 'setLivePush'
+        },
         {
           reg: '^#?(绝区零|星铁)?(全体|匿名)?取消订阅直播间',
           fnc: 'delLivePush'
@@ -26,15 +26,16 @@ export default class bilibili extends plugin {
         {
           reg: '^#?(绝区零|星铁)?(本?群|我的?)订阅(列表|list)?',
           fnc: 'listLivePush'
-        }]
+        }
+      ]
     })
     this.task = {
-      name: 'bililivePush',
-      fnc: () => this.livepush(),
-      cron: '10 */1 * * * *',
-      log: false
-    },
-    this.e = e
+        name: 'bililivePush',
+        fnc: () => this.livepush(),
+        cron: '10 */1 * * * *',
+        log: false
+      },
+      this.e = e
   }
 
   async listLivePush(e) {
@@ -52,7 +53,13 @@ export default class bilibili extends plugin {
       key = 'groups'
     }
     ret = await Bili.setRoomInfo(ret)
-    for (const { uid, uname, face, ...item } of ret) {
+    for (const {
+        uid,
+        uname,
+        face,
+        ...item
+      }
+      of ret) {
       msg.push([
         segment.image(face),
         `昵称: ${uname}\n`,
@@ -72,7 +79,11 @@ export default class bilibili extends plugin {
     if (isNaN(room_id)) {
       return e.reply("直播间id格式不对！请输入数字！")
     }
-    let {uid, face, uname} = await Bili.getRoomInfo(room_id)
+    let {
+      uid,
+      face,
+      uname
+    } = await Bili.getRoomInfo(room_id)
     if (!uid) {
       return e.reply("不存在该直播间！")
     }
@@ -94,7 +105,10 @@ export default class bilibili extends plugin {
       return e.reply("直播间id格式不对！请输入数字！")
     }
     let data = Bili.getLiveData()?.data
-    let {uid} = await Bili.getRoomInfo(room_id)
+    let {
+      uid
+    } = await Bili.getRoomInfo(room_id)
+    if (data[uid]?.group[e.group_id]?.filter(i => i == 99999).length == 1) e.user_id = 99999
     if (!data[uid]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
@@ -114,7 +128,11 @@ export default class bilibili extends plugin {
     if (isNaN(uid)) {
       return e.reply("uid格式不对！请输入数字！")
     }
-    let {room_id, face, uname} = await Bili.getRoomInfoByUid(uid)
+    let {
+      room_id,
+      face,
+      uname
+    } = await Bili.getRoomInfoByUid(uid)
     if (!room_id) {
       return e.reply("不存在该直播间！")
     }
@@ -135,8 +153,9 @@ export default class bilibili extends plugin {
     if (isNaN(uid)) {
       return e.reply("uid格式不对！请输入数字！")
     }
-    let result = Bili.getLiveData()?.data
-    if (!result[uid]?.group[e.group_id]?.includes(e.user_id)) {
+    let data = Bili.getLiveData()?.data
+    if (data[uid]?.group[e.group_id]?.filter(i => i == 99999).length == 1) e.user_id = 99999
+    if (!data[uid]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
 
@@ -180,7 +199,9 @@ export default class bilibili extends plugin {
     }
 
     const sendLiveEndMessage = async (groupId, roomInfo, liveDuration) => {
-      const { cover_from_user } = roomInfo
+      const {
+        cover_from_user
+      } = roomInfo
       const message = [
         segment.image(cover_from_user),
         '主播下播la~~~~\n',
@@ -189,14 +210,23 @@ export default class bilibili extends plugin {
       Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
-    for (const { group, ...roomInfo } of liveData) {
+    for (const {
+        group,
+        ...roomInfo
+      }
+      of liveData) {
       roomInfo.live_time *= 1000
-      const { room_id, live_status } = roomInfo
+      const {
+        room_id,
+        live_status
+      } = roomInfo
       const redisKey = `bililive_${room_id}`
       const data = await redis.get(redisKey)
 
       if (live_status === 1 && !data) {
-        const { live_time } = roomInfo
+        const {
+          live_time
+        } = roomInfo
         redis.set(redisKey, JSON.stringify({
           live_time
         }))
@@ -205,7 +235,9 @@ export default class bilibili extends plugin {
           sendLiveStartMessage(groupId, userIds, roomInfo)
         }
       } else if (live_status != 1 && data) {
-        const { live_time } = JSON.parse(data)
+        const {
+          live_time
+        } = JSON.parse(data)
         const liveDuration = this.getDealTime(moment(live_time), moment())
 
         for (const [groupId] of Object.entries(group)) {
@@ -221,12 +253,12 @@ export default class bilibili extends plugin {
     let str = ''
     let dura = etime.format('x') - stime.format('x')
     let tempTime = moment.duration(dura)
-    str += tempTime.years() ? tempTime.years() + '年': ''
-    str += tempTime.months() ? tempTime.months() + '月': ''
-    str += tempTime.days() ? tempTime.days() + '日': ''
-    str += tempTime.hours() ? tempTime.hours() + '小时': ''
-    str += tempTime.minutes() ? tempTime.minutes() + '分钟': ''
-    if (dura <= 5*60*1000) str += `\n(没关系的, ${str}也很厉害了)`
+    str += tempTime.years() ? tempTime.years() + '年' : ''
+    str += tempTime.months() ? tempTime.months() + '月' : ''
+    str += tempTime.days() ? tempTime.days() + '日' : ''
+    str += tempTime.hours() ? tempTime.hours() + '小时' : ''
+    str += tempTime.minutes() ? tempTime.minutes() + '分钟' : ''
+    if (dura <= 5 * 60 * 1000) str += `\n(没关系的, ${str}也很厉害了)`
     return str
   }
 }
