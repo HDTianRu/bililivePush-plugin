@@ -46,7 +46,8 @@ class Bili {
     } = data
     const group = livedata[uid].group
     if (group[group_id]) {
-      group[group_id] = group[group_id].filter(id => id !== user_id)
+      if (group[group_id].filter(i => i == 99999).length == 1) group[group_id] = []
+      else group[group_id] = group[group_id].filter(id => id !== user_id)
       if (group[group_id].length === 0) {
         delete group[group_id]
       }
