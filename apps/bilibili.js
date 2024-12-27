@@ -109,6 +109,7 @@ export default class bilibili extends plugin {
       uid
     } = await Bili.getRoomInfo(room_id)
     if (data[uid]?.group[e.group_id]?.filter(i => i == 99999).length == 1) e.user_id = 99999
+    if (data[uid]?.group[e.group_id]?.filter(i => i == 0).length == 1) e.user_id = 0
     if (!data[uid]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
@@ -155,6 +156,7 @@ export default class bilibili extends plugin {
     }
     let data = Bili.getLiveData()?.data
     if (data[uid]?.group[e.group_id]?.filter(i => i == 99999).length == 1) e.user_id = 99999
+    if (data[uid]?.group[e.group_id]?.filter(i => i == 0).length == 1) e.user_id = 0
     if (!data[uid]?.group[e.group_id]?.includes(e.user_id)) {
       return e.reply("你还没有订阅该直播间！")
     }
