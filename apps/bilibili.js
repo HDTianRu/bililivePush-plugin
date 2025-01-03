@@ -69,6 +69,7 @@ export default class bilibili extends plugin {
       })
       em("#本群订阅列表")
       em("#我的订阅列表")
+      return true
     }
     ret = await Bili.setRoomInfo(ret)
     for (const {
