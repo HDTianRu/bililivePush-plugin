@@ -24,7 +24,7 @@ export default class bilibili extends plugin {
           fnc: 'delLivePushByUid'
         },
         {
-          reg: '^#?(绝区零|星铁)?(本?群|我的?)订阅(列表|list)?',
+          reg: '^#?(绝区零|星铁)?(本?群|我的?)?订阅(列表|list)?',
           fnc: 'listLivePush'
         }
       ]
@@ -51,6 +51,24 @@ export default class bilibili extends plugin {
         user_id: e.user_id
       })
       key = 'groups'
+    } else {
+      const em = (command) => Bot.em("message", {
+        self_id: this.e.self_id,
+        message_id: this.e.message_id,
+        user_id: e.user_id,
+        sender: e.sender,
+        reply: this.reply.bind(this),
+        post_type: "message",
+        message_type: 'group',
+        sub_type: 'normal',
+        message: [{
+          type: "text",
+          text: command
+        }],
+        raw_message: command,
+      })
+      em("#本群订阅列表")
+      em("#我的订阅列表")
     }
     ret = await Bili.setRoomInfo(ret)
     for (const {
