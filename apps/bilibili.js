@@ -1,6 +1,7 @@
 import Bili from '../model/bilibili.js'
 import moment from 'moment'
 import common from '../../../lib/common/common.js'
+import Cfg from '../model/Cfg.js'
 
 export default class bilibili extends plugin {
   constructor(e) {
@@ -231,6 +232,10 @@ export default class bilibili extends plugin {
       Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
+    const msleep = () => {
+      return new Promise(resolve => setTimeout(resolve, Cfg.get('user.sleep', 0) * 1000))
+    }
+
     for (const {
         group,
         ...roomInfo
@@ -254,6 +259,7 @@ export default class bilibili extends plugin {
 
         for (const [groupId, userIds] of Object.entries(group)) {
           sendLiveStartMessage(groupId, userIds, roomInfo)
+          await msleep()
         }
       } else if (live_status != 1 && data) {
         const {
@@ -263,6 +269,7 @@ export default class bilibili extends plugin {
 
         for (const [groupId] of Object.entries(group)) {
           sendLiveEndMessage(groupId, roomInfo, liveDuration)
+          await msleep()
         }
 
         redis.del(redisKey)
