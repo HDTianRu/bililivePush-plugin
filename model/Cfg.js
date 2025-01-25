@@ -30,7 +30,7 @@ const Cfg = {
     lodash.set(cfg, rote, val)
   },
   fresh() {
-    fs.writeFileSync(_cfgPath + "cfg.json", JSON.stringify(cfg, null, "\t"))
+    fs.writeFileSync(path.join(_cfgPath, "cfg.json"), JSON.stringify(cfg, null, "\t"))
   },
   merge() {
     return lodash.merge({}, cfg)

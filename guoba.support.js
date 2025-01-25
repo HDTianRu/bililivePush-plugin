@@ -21,7 +21,10 @@ export function supportGuoba() {
         field: 'user.sleep',
         label: '群发间隔',
         bottomHelpMessage: '推送给多个群时间隔的时间(单位秒)',
-        component: 'input',
+        component: "InputNumber",
+          componentProps: {
+            placeholder: "请输入间隔时间"
+          }
       }],
       getConfigData() {
         return Cfg.merge()
