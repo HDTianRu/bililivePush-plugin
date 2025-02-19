@@ -22,9 +22,14 @@ export function supportGuoba() {
         label: '群发间隔',
         bottomHelpMessage: '推送给多个群时间隔的时间(单位秒)',
         component: "InputNumber",
-          componentProps: {
-            placeholder: "请输入间隔时间"
-          }
+        componentProps: {
+          placeholder: "请输入间隔时间"
+        }
+      }, {
+        field: 'user.endPush',
+        label: '下播推送',
+        bottomHelpMessage: '是否推送下播信息',
+        component: "Switch"
       }],
       getConfigData() {
         return Cfg.merge()

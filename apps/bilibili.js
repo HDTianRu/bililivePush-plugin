@@ -267,11 +267,12 @@ export default class bilibili extends plugin {
         } = JSON.parse(data)
         const liveDuration = this.getDealTime(moment(live_time), moment())
 
-        for (const [groupId] of Object.entries(group)) {
-          sendLiveEndMessage(groupId, roomInfo, liveDuration)
-          await msleep()
+        if (Cfg.get('user.endPush', true)) {
+          for (const [groupId] of Object.entries(group)) {
+            sendLiveEndMessage(groupId, roomInfo, liveDuration)
+            await msleep()
+          }
         }
-
         redis.del(redisKey)
       }
     }
