@@ -262,18 +262,17 @@ export default class bilibili extends plugin {
           await msleep()
         }
       } else if (live_status != 1 && data) {
+        redis.del(redisKey)
+        if (!Cfg.get('user.endPush', true)) return
+
         const {
           live_time
         } = JSON.parse(data)
         const liveDuration = this.getDealTime(moment(live_time), moment())
-
-        if (Cfg.get('user.endPush', true)) {
-          for (const [groupId] of Object.entries(group)) {
-            sendLiveEndMessage(groupId, roomInfo, liveDuration)
-            await msleep()
-          }
+        for (const [groupId] of Object.entries(group)) {
+          sendLiveEndMessage(groupId, roomInfo, liveDuration)
+          await msleep()
         }
-        redis.del(redisKey)
       }
     }
   }
