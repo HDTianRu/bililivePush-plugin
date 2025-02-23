@@ -6,17 +6,21 @@ import {
 } from "../config/constant.js"
 
 const _cfgPath = path.join(pluginRoot, "data")
-let cfg = {}
+let _cfg = {}
 
 try {
   if (fs.existsSync(_cfgPath + "cfg.json")) {
-    cfg = JSON.parse(fs.readFileSync(path.join(_cfgPath, "cfg.json"), "utf8")) || {}
+    _cfg.user = JSON.parse(fs.readFileSync(path.join(_cfgPath, "cfg.json"), "utf8")) || {}
   } else {
-    cfg = JSON.parse(fs.readFileSync(path.join(_cfgPath, "cfg_default.json"), "utf8")) || {}
+    _cfg.def = JSON.parse(fs.readFileSync(path.join(_cfgPath, "cfg_default.json"), "utf8")) || {}
   }
 } catch (e) {
   // do nth
 }
+
+const cfg = new Proxy(_cfg, {
+  get: (target, prop) => target.user[prop] || target.def[prop]
+})
 
 const Cfg = {
   get(rote, def = '') {

@@ -217,7 +217,10 @@ export default class bilibili extends plugin {
         `开播时间: ${moment(live_time).format('YYYY-MM-DD HH:mm:ss')}\n`,
         `直播间地址: https://live.bilibili.com/${room_id}`
       ]
-      Bot.pickGroup(Number(groupId)).sendMsg(message)
+      if (Cfg.get('user.forward', false)) {
+        Bot.pickGroup(Number(groupId)).sendMsg(await common.makeForwardMsg(e, [message]))
+        Bot.pickGroup(Number(groupId)).sendMsg(userMentions)
+      } else Bot.pickGroup(Number(groupId)).sendMsg(message)
     }
 
     const sendLiveEndMessage = async (groupId, roomInfo, liveDuration) => {

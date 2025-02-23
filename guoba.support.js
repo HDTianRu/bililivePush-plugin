@@ -30,6 +30,11 @@ export function supportGuoba() {
         label: '下播推送',
         bottomHelpMessage: '是否推送下播信息',
         component: "Switch"
+      }, {
+        field: 'user.forward',
+        label: '使用转发推送',
+        bottomHelpMessage: '使用合并转发推送消息',
+        component: "Switch"
       }],
       getConfigData() {
         return Cfg.merge()

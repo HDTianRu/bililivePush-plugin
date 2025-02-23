@@ -1,6 +1,7 @@
 {
 	"user": {
 		"sleep": 0,
-		"endPush": true
+		"endPush": true,
+		"forward": false
 	}
 }
