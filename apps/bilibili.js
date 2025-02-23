@@ -7,7 +7,7 @@ export default class bilibili extends plugin {
   constructor(e) {
     super({
       name: 'bilibili',
-      priority: 25,
+      priority: -114514,
       rule: [{
           reg: '^#?(绝区零|星铁)?(全体|匿名)?订阅直播间',
           fnc: 'setLivePush'
