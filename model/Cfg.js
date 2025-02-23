@@ -19,7 +19,7 @@ try {
 }
 
 const cfg = new Proxy(_cfg, {
-  get: (target, prop) => target.user[prop] || target.def[prop]
+  get: (target, prop) => target?.user?.[prop] || target?.def?.[prop]
 })
 
 const Cfg = {
