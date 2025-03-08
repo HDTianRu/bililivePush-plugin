@@ -3,4 +3,5 @@ data/*
 data/bilibili/*
 !data/bilibili/.placeholder
 !data/cfg_default.json
+data/cfg.json
 node_modules
