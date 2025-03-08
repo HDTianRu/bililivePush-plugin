@@ -189,11 +189,11 @@ export default class bilibili extends plugin {
     return e.reply("取消直播间订阅成功！")
   }
 
-  async livepush() {
+  async livepush(e) {
     let liveData = Object.values(Bili.getLiveData()?.data)
     liveData = await Bili.setRoomInfo(liveData)
 
-    const sendLiveStartMessage = async (groupId, userIds, roomInfo) => {
+    const sendLiveStartMessage = async (groupId, userIds, roomInfo, e) => {
       const {
         room_id,
         cover_from_user,
@@ -261,7 +261,7 @@ export default class bilibili extends plugin {
         }))
 
         for (const [groupId, userIds] of Object.entries(group)) {
-          sendLiveStartMessage(groupId, userIds, roomInfo)
+          sendLiveStartMessage(groupId, userIds, roomInfo, e)
           await msleep()
         }
       } else if (live_status != 1 && data) {
