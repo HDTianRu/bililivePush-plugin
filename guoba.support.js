@@ -1,5 +1,3 @@
-import path from 'path'
-import lodash from 'lodash'
 import Cfg from './model/Cfg.js'
 
 export function supportGuoba() {
@@ -45,7 +43,7 @@ export function supportGuoba() {
         for (let [keyPath, value] of Object.entries(data)) {
           Cfg._set(keyPath, value)
         }
-        Cfg.fresh()
+        Cfg.save()
         return Result.ok({}, '保存成功~')
       },
     },

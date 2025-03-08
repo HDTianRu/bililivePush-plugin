@@ -9,35 +9,28 @@ const _cfgPath = path.join(pluginRoot, "data")
 let _cfg = {}
 
 try {
-  if (fs.existsSync(_cfgPath + "cfg.json")) {
-    _cfg.user = JSON.parse(fs.readFileSync(path.join(_cfgPath, "cfg.json"), "utf8")) || {}
-  } else {
-    _cfg.def = JSON.parse(fs.readFileSync(path.join(_cfgPath, "cfg_default.json"), "utf8")) || {}
-  }
+  _cfg.user = JSON.parse(fs.readFileSync(path.join(_cfgPath, "cfg.json"), "utf8")) || {}
+  _cfg.def = JSON.parse(fs.readFileSync(path.join(_cfgPath, "cfg_default.json"), "utf8")) || {}
 } catch (e) {
-  // do nth
+  loggor.warn("读取配置文件失败", e)
 }
 
-const cfg = new Proxy(_cfg, {
-  get: (target, prop) => target?.user?.[prop] || target?.def?.[prop]
-})
-
 const Cfg = {
-  get(rote, def = '') {
-    return lodash.get(cfg, rote, def)
+  get(rote, def = undefined) {
+    return lodash.get(_cfg.user, rote) || lodash.get(_cfg.def, rote) || def
   },
   set(rote, val) {
     Cfg._set(rote, val)
-    Cfg.fresh()
+    Cfg.save()
   },
   _set(rote, val) {
-    lodash.set(cfg, rote, val)
+    lodash.set(_cfg.user, rote, val)
   },
-  fresh() {
-    fs.writeFileSync(path.join(_cfgPath, "cfg.json"), JSON.stringify(cfg, null, "\t"))
+  save() {
+    fs.writeFileSync(path.join(_cfgPath, "cfg.json"), JSON.stringify(_cfg.user, null, "\t"))
   },
   merge() {
-    return lodash.merge({}, cfg)
+    return lodash.merge({}, _cfg.def, _cfg.user)
   }
 }
 
