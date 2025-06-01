@@ -35,7 +35,7 @@ export function supportGuoba() {
         component: "Switch"
       }],
       getConfigData() {
-        return Cfg.merge()
+        return Cfg.getAll()
       },
       setConfigData(data, {
         Result
